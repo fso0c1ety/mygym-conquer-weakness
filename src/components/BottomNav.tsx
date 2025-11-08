@@ -1,4 +1,4 @@
-import { Home, BarChart3, Dumbbell } from "lucide-react";
+import { Home, BarChart3, Dumbbell, CreditCard, Apple } from "lucide-react";
 import { NavLink } from "./NavLink";
 
 const BottomNav = () => {
@@ -45,6 +45,36 @@ const BottomNav = () => {
               <Dumbbell className={`w-6 h-6 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
               <span className={`text-xs font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}>
                 Workouts
+              </span>
+            </>
+          )}
+        </NavLink>
+
+        <NavLink
+          to="/memberships"
+          className="flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-colors"
+          activeClassName="text-primary"
+        >
+          {({ isActive }) => (
+            <>
+              <CreditCard className={`w-6 h-6 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+              <span className={`text-xs font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                Plans
+              </span>
+            </>
+          )}
+        </NavLink>
+
+        <NavLink
+          to="/diet-plans"
+          className="flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-colors"
+          activeClassName="text-primary"
+        >
+          {({ isActive }) => (
+            <>
+              <Apple className={`w-6 h-6 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+              <span className={`text-xs font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                Nutrition
               </span>
             </>
           )}
