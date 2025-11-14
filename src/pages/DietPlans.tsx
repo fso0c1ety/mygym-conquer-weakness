@@ -2,6 +2,7 @@ import { dietPlans } from "@/lib/dietPlans";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import BottomNav from "@/components/BottomNav";
 import logo from "@/assets/logo.png";
 import workoutSquats from "@/assets/workout-squats.jpg";
 import workoutPushups from "@/assets/workout-pushups.jpg";
@@ -31,12 +32,8 @@ const DietPlans = () => {
 
       <div className="p-6">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-foreground mb-2">
-            Nutrition Plans
-          </h2>
-          <p className="text-muted-foreground">
-            Fuel your transformation with expert meal plans
-          </p>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Nutrition</h2>
+          <p className="text-muted-foreground">Fuel your transformation with expert meal plans</p>
         </div>
 
         <div className="grid gap-6">
@@ -51,9 +48,9 @@ const DietPlans = () => {
                 <div className={`absolute inset-0 bg-gradient-to-t ${plan.color} opacity-80`} />
                 <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="text-2xl font-bold text-white mb-1">
-                    {plan.name}
+                    {plan.name.replace(/^plans\./, "")}
                   </h3>
-                  <p className="text-white/90 text-sm">{plan.description}</p>
+                  <p className="text-white/90 text-sm">{plan.description.replace(/^plans\./, "")}</p>
                 </div>
               </div>
 
@@ -100,6 +97,7 @@ const DietPlans = () => {
           ))}
         </div>
       </div>
+      <BottomNav />
     </div>
   );
 };

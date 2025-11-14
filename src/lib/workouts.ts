@@ -78,8 +78,31 @@ export const todayActivity: ActivityData = {
   caloriesGoal: 2340,
 };
 
-export const getTodaysChallenge = () => ({
-  title: "Casey's Challenge",
-  description: "Urban area start | 3:00 PM",
-  image: "challenge-running",
-});
+export interface Challenge {
+  title: string;
+  description: string;
+  image: string;
+}
+
+export const getTodaysChallenges = (): Challenge[] => [
+  {
+    title: "Casey's Challenge",
+    description: "Urban area start | 3:00 PM",
+    image: "challenge-running",
+  },
+  {
+    title: "Mountain Sprint",
+    description: "Hill sprints | 5:00 PM",
+    image: "workout-squats",
+  },
+  {
+    title: "Endurance Ride",
+    description: "Cycle 20km | 7:00 AM",
+    image: "workout-lunges",
+  },
+  {
+    title: "Core Crusher",
+    description: "Abs & Core | 6:30 PM",
+    image: "workout-pushups",
+  },
+];

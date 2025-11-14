@@ -36,22 +36,31 @@ const WorkoutPlan = () => {
           </button>
         </div>
 
-        {/* Progress Card */}
-        <div className="bg-workout-yellow/90 rounded-2xl p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <span className="text-xs text-background/70 font-semibold uppercase">
-                Progress
-              </span>
-              <h2 className="text-2xl font-bold text-background mt-1">Lower Body</h2>
-              <p className="text-sm text-background/80">C6001. 10 mins</p>
-              <div className="mt-3 bg-background text-foreground inline-block px-4 py-2 rounded-full">
-                <span className="text-xl font-bold">{caloriesBurned}</span>
-                <span className="text-xs ml-1">CALORIES</span>
+        {/* Progress Card with Image Background */}
+        <div className="relative rounded-2xl mb-6 overflow-hidden shadow-lg">
+          <img
+            src={logoImage}
+            alt="Workout Progress Background"
+            className="absolute inset-0 w-full h-full object-cover opacity-40"
+          />
+          {/* Red overlay at 20% opacity */}
+          <div className="absolute inset-0 bg-red-500/20" />
+          <div className="relative z-10 p-4 backdrop-blur-sm bg-background/30">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <span className="text-xs text-foreground/70 font-semibold uppercase tracking-wide">
+                  Progress
+                </span>
+                <h2 className="text-2xl font-bold text-foreground mt-1">Lower Body</h2>
+                <p className="text-sm text-muted-foreground">C6001 · 10 mins</p>
+                <div className="mt-3 bg-foreground/90 text-background inline-block px-4 py-2 rounded-full">
+                  <span className="text-xl font-bold">{caloriesBurned}</span>
+                  <span className="text-xs ml-1">CALORIES</span>
+                </div>
               </div>
-            </div>
-            <div className="ml-4">
-              <img src={logoImage} alt="MY GYM" className="w-16 h-16 object-contain" />
+              <div className="ml-4 hidden sm:block">
+                <img src={logoImage} alt="MY GYM" className="w-20 h-20 object-contain drop-shadow" />
+              </div>
             </div>
           </div>
         </div>
