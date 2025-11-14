@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "MyGym",
+    "slug": "mygym-conquer-weakness",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./public/icon-512.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./public/icon-512.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ef4444"
+    },
+    "ios": {
+      "bundleIdentifier": "com.mygym.app",
+      "supportsTablet": true,
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.mygym.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./public/icon-512.png",
+        "backgroundColor": "#ef4444"
+      }
+    },
+    "web": {
+      "favicon": "./public/icon-192.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9e55f3e6-811e-4831-98df-d1af7892533d"
+      }
+    }
+  }
+}

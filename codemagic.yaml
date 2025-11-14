@@ -1,0 +1,100 @@
+workflows:
+  ios-capacitor:
+    name: iOS (Capacitor)
+    max_build_duration: 60
+    environment:
+      ios_signing:
+        # Create these in Codemagic UI (Settings > Team > Code signing identities)
+        # and reference the group here. Alternatively, use App Store Connect API key.
+        # Set up automatic code signing to avoid managing certs manually.
+        distribution_type: ad-hoc
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.mygym.app"
+      node: 20
+      xcode: 16.0
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Install Node dependencies
+        script: |
+          npm ci
+      - name: Build web app
+        script: |
+          npm run build
+      - name: Sync Capacitor iOS project
+        script: |
+          npx cap sync ios
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod repo update
+          pod install
+      - name: Build iOS .ipa with Codemagic CLI tools
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-configuration Release \
+            --export-method ad-hoc
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - $CM_BUILD_DIR/Build/*.ipa
+      - $CM_BUILD_DIR/Build/xcarchive/*.xcarchive
+      - ios/App/build/**/*.dSYM
+    publishing:
+      email:
+        recipients:
+          - "$CM_USER_EMAIL"
+        notify:
+          success: true
+          failure: true
+  android-capacitor:
+    name: Android (Capacitor)
+    max_build_duration: 60
+    environment:
+      vars:
+        ANDROID_PROJECT_DIR: "android"
+        ANDROID_APP_DIR: "android/app"
+      node: 20
+      android:
+        build_tools_version: "34.0.0"
+        compile_sdk_version: 34
+        ndk: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Install Node dependencies
+        script: |
+          npm ci
+      - name: Build web app
+        script: |
+          npm run build
+      - name: Sync Capacitor Android project
+        script: |
+          npx cap sync android
+      - name: Build Android APK (debug)
+        script: |
+          cd $ANDROID_PROJECT_DIR
+          ./gradlew assembleDebug
+    artifacts:
+      - android/app/build/outputs/**/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - "$CM_USER_EMAIL"
+        notify:
+          success: true
+          failure: true
