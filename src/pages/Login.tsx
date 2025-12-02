@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import logo from "@/assets/logo.png";
+import { Dumbbell, Mail, Lock } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -31,46 +32,68 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-6">
-          <div className="flex justify-center">
-            <img src={logo} alt="MY GYM" className="w-20 h-20" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      </div>
+
+      <Card className="w-full max-w-md card-gradient-glow relative z-10 backdrop-blur-xl border-primary/20">
+        <CardHeader className="space-y-6 text-center">
+          <div className="flex justify-center mb-2">
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+              <div className="relative bg-gradient-to-br from-primary to-secondary p-4 rounded-2xl glow-primary">
+                <Dumbbell className="w-12 h-12 text-white" />
+              </div>
+            </div>
           </div>
-          <div className="text-center space-y-2">
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in to your account to continue</CardDescription>
+          <div className="space-y-2">
+            <CardTitle className="text-3xl text-gradient-primary">Welcome Back</CardTitle>
+            <CardDescription className="text-base">Transform your fitness journey today</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="pl-10 h-12 bg-background/50 border-border/50 focus:border-primary/50 transition-all"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  className="pl-10 h-12 bg-background/50 border-border/50 focus:border-primary/50 transition-all"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
             </div>
-            <Button type="submit" className="w-full">
+            <Button 
+              type="submit" 
+              className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-all glow-primary text-base font-semibold"
+            >
               Sign In
             </Button>
-            <div className="text-center text-sm text-muted-foreground">
-              <a href="#" className="hover:underline">
+            <div className="text-center text-sm">
+              <a href="#" className="text-primary hover:text-primary/80 transition-colors font-medium">
                 Forgot your password?
               </a>
             </div>

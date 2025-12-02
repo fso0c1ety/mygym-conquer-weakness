@@ -1,4 +1,4 @@
-import { Calendar, Flame, Settings as SettingsIcon } from "lucide-react";
+import { Calendar, Flame, Settings as SettingsIcon, TrendingUp, Zap, Star } from "lucide-react";
 import ProgressRing from "@/components/ProgressRing";
 import BottomNav from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
@@ -24,163 +24,221 @@ const ActivityDashboard = () => {
 
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="px-6 pt-8 pb-4">
-        <div className="flex items-center justify-between mb-4">
-          <img src={logoImage} alt="MY GYM" className="w-12 h-12 object-contain" />
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open settings">
-                <SettingsIcon className="h-5 w-5" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-48 p-2">
-              <div className="text-sm font-semibold px-2 py-1.5">Menu</div>
-              <button
-                className="w-full text-left px-2 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground text-sm"
-                onClick={() => navigate("/settings")}
-              >
-                Settings
-              </button>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div>
-          <h2 className="text-sm text-muted-foreground">Your Activity</h2>
-          <h1 className="text-2xl font-bold text-foreground">May 2024</h1>
-        </div>
-      </header>
+    <div className="min-h-screen pb-20">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-40 left-10 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+      </div>
 
-      {/* Calendar */}
-      <div className="px-6 mb-6">
-        <div className="bg-card rounded-2xl p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Calendar className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-foreground">Date</span>
-          </div>
-          <div className="grid grid-cols-6 gap-4">
-            {daysOfWeek.map((day, idx) => (
-              <div key={idx} className="text-center">
-                <div className="text-xs text-muted-foreground mb-2">{day}</div>
-                <div
-                  className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center font-semibold ${
-                    dates[idx] === today
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground"
-                  }`}
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="px-6 pt-8 pb-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 rounded-xl blur-md"></div>
+                <div className="relative bg-gradient-to-br from-primary to-secondary p-2 rounded-xl">
+                  <img src={logoImage} alt="MY GYM" className="w-8 h-8 object-contain brightness-0 invert" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-xs text-muted-foreground">Your Activity</h2>
+                <h1 className="text-xl font-bold text-gradient-primary">May 2024</h1>
+              </div>
+            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="hover:bg-primary/10" aria-label="Open settings">
+                  <SettingsIcon className="h-5 w-5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-48 p-2 card-gradient border-primary/20">
+                <div className="text-sm font-semibold px-2 py-1.5">Menu</div>
+                <button
+                  className="w-full text-left px-2 py-1.5 rounded-md hover:bg-primary/20 transition-colors text-sm"
+                  onClick={() => navigate("/settings")}
                 >
-                  {dates[idx]}
+                  Settings
+                </button>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </header>
+
+        {/* Calendar */}
+        <div className="px-6 mb-6">
+          <div className="card-gradient-glow rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Calendar className="w-4 h-4 text-primary" />
+              </div>
+              <span className="text-sm font-semibold text-foreground">This Week</span>
+            </div>
+            <div className="grid grid-cols-6 gap-3">
+              {daysOfWeek.map((day, idx) => (
+                <div key={idx} className="text-center">
+                  <div className="text-xs text-muted-foreground mb-2">{day}</div>
+                  <div
+                    className={`w-11 h-11 mx-auto rounded-xl flex items-center justify-center font-semibold transition-all ${
+                      dates[idx] === today
+                        ? "bg-gradient-to-br from-primary to-secondary text-white glow-primary scale-110"
+                        : "bg-muted/50 text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {dates[idx]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="px-6 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-foreground">Today's Stats</h2>
+            <TrendingUp className="w-5 h-5 text-primary" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative overflow-hidden card-gradient rounded-2xl p-4 border-2 border-pink-500/20">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-pink-500/10 rounded-full blur-2xl"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-1.5 bg-pink-500/20 rounded-lg">
+                    <Flame className="w-4 h-4 text-pink-400" />
+                  </div>
+                  <span className="text-xs text-muted-foreground">Goal</span>
+                </div>
+                <p className="text-3xl font-bold text-gradient-secondary mb-1">{todayActivity.caloriesGoal}</p>
+                <p className="text-xs text-muted-foreground">kcal to burn</p>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden card-gradient rounded-2xl p-4 border-2 border-purple-500/20">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full blur-2xl"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-1.5 bg-purple-500/20 rounded-lg">
+                    <Zap className="w-4 h-4 text-purple-400" />
+                  </div>
+                  <span className="text-xs text-muted-foreground">Burned</span>
+                </div>
+                <p className="text-3xl font-bold text-gradient-primary mb-1">{todayActivity.caloriesBurned}</p>
+                <p className="text-xs text-muted-foreground">kcal today</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Ring */}
+        <div className="px-6 mb-6">
+          <div className="card-gradient-glow rounded-2xl p-6 flex items-center justify-between backdrop-blur-sm">
+            <div className="flex-1">
+              <p className="text-sm text-muted-foreground mb-1">Total Burned</p>
+              <p className="text-3xl font-bold text-gradient-primary mb-4">
+                {todayActivity.caloriesBurned} <span className="text-lg text-muted-foreground">kcal</span>
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary"></div>
+                  <p className="text-sm text-muted-foreground">
+                    Remaining: <span className="font-semibold text-foreground">{todayActivity.caloriesRemaining} kcal</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <ProgressRing progress={progressPercent} />
+          </div>
+        </div>
+
+        {/* Today's Challenges */}
+        <div className="px-6 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-foreground">Today's Challenges</h2>
+            <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {challenges.map((ch, idx) => (
+              <div
+                key={idx}
+                className="relative min-w-[280px] max-w-xs card-gradient rounded-2xl p-5 overflow-hidden h-36 flex flex-col justify-end border border-primary/20 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/40 active:scale-[0.98] glow-primary"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
+                <img
+                  src={
+                    ch.image === 'challenge-running' ? challengeRunning :
+                    ch.image === 'workout-squats' ? workoutSquats :
+                    ch.image === 'workout-lunges' ? workoutLunges :
+                    ch.image === 'workout-pushups' ? workoutPushups :
+                    challengeRunning
+                  }
+                  alt={ch.title}
+                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30"
+                />
+                <div className="relative z-10">
+                  <h3 className="text-xl font-bold text-white mb-1 drop-shadow-lg">{ch.title}</h3>
+                  <p className="text-sm text-white/90 drop-shadow">{ch.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="px-6 mb-6">
-        <h2 className="text-xl font-bold text-foreground mb-2">Today's Stats</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-workout-pink/20 border-2 border-workout-pink/30 rounded-2xl p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Flame className="w-5 h-5 text-primary" />
-              <span className="text-sm text-muted-foreground">Calories Goal</span>
-            </div>
-            <p className="text-2xl font-bold text-foreground">{todayActivity.caloriesGoal}</p>
-            <p className="text-xs text-muted-foreground">kcal</p>
-          </div>
-
-          <div className="bg-workout-purple/20 border-2 border-workout-purple/30 rounded-2xl p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Flame className="w-5 h-5 text-primary" />
-              <span className="text-sm text-muted-foreground">Burned</span>
-            </div>
-            <p className="text-2xl font-bold text-foreground">{todayActivity.caloriesBurned}</p>
-            <p className="text-xs text-muted-foreground">kcal</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Progress Ring */}
-      <div className="px-6 mb-6">
-        <div className="bg-card rounded-2xl p-6 flex items-center justify-between">
-          <div>
-            <p className="text-2xl font-bold text-primary mb-1">
-              {todayActivity.caloriesBurned} kcal
-            </p>
-            <p className="text-sm text-muted-foreground">Burned</p>
-            <p className="text-xl font-bold text-foreground mt-4">
-              {todayActivity.caloriesRemaining} kcal
-            </p>
-            <p className="text-sm text-muted-foreground">Remaining</p>
-          </div>
-          <ProgressRing progress={progressPercent} />
-        </div>
-      </div>
-
-      {/* Today's Challenges */}
-      <div className="px-6 mb-6">
-        <h2 className="text-xl font-bold text-foreground mb-2">Today's Challenges</h2>
-        <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
-          {challenges.map((ch, idx) => (
-            <div
-              key={idx}
-              className="relative min-w-[260px] max-w-xs bg-primary/20 rounded-2xl p-4 overflow-hidden h-32 flex flex-col justify-end shadow-lg cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+        {/* Top Fitness Trainers */}
+        <div className="px-6 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-foreground">Top Trainers</h2>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-primary hover:text-primary/80 hover:bg-primary/10"
+              onClick={() => navigate("/trainers")}
             >
-              <img
-                src={
-                  ch.image === 'challenge-running' ? challengeRunning :
-                  ch.image === 'workout-squats' ? workoutSquats :
-                  ch.image === 'workout-lunges' ? workoutLunges :
-                  ch.image === 'workout-pushups' ? workoutPushups :
-                  challengeRunning
-                }
-                alt={ch.title}
-                className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40"
-              />
-              <div className="relative z-10">
-                <h3 className="text-lg font-bold text-primary-foreground mb-1">{ch.title}</h3>
-                <p className="text-sm text-primary-foreground/90">{ch.description}</p>
+              View All
+            </Button>
+          </div>
+          <div className="grid gap-4">
+            <div className="card-gradient-glow rounded-2xl p-4 flex items-center gap-4 border border-primary/10 hover:border-primary/30 transition-all cursor-pointer">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/30 rounded-full blur-md"></div>
+                <img src={logoImage} alt="Emma Johnson" className="relative w-14 h-14 rounded-full object-cover border-2 border-primary" />
+              </div>
+              <div className="flex-1">
+                <div className="font-bold text-base">Emma Johnson</div>
+                <div className="text-xs text-muted-foreground mb-1">Strength & Conditioning</div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs text-muted-foreground">4.9 (120 reviews)</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-primary font-bold text-lg">$40</div>
+                <div className="text-xs text-muted-foreground">/session</div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Top Fitness Trainers */}
-      <div className="px-6 mb-6">
-        <h2 className="text-xl font-bold text-foreground mb-2">Top Fitness Trainers</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {/* Example trainers, you can expand this list */}
-          <div className="bg-card rounded-2xl p-4 flex items-center gap-4 shadow">
-            <img src={logoImage} alt="Emma Johnson" className="w-16 h-16 rounded-full object-cover border-2 border-primary" />
-            <div>
-              <div className="font-bold text-lg">Emma Johnson</div>
-              <div className="text-sm text-muted-foreground mb-1">Strength & Conditioning</div>
-              <div className="text-primary font-semibold">$40/session</div>
-            </div>
-          </div>
-          <div className="bg-card rounded-2xl p-4 flex items-center gap-4 shadow">
-            <img src={logoImage} alt="Liam Smith" className="w-16 h-16 rounded-full object-cover border-2 border-primary" />
-            <div>
-              <div className="font-bold text-lg">Liam Smith</div>
-              <div className="text-sm text-muted-foreground mb-1">Cardio & HIIT</div>
-              <div className="text-primary font-semibold">$35/session</div>
-            </div>
-          </div>
-          <div className="bg-card rounded-2xl p-4 flex items-center gap-4 shadow">
-            <img src={logoImage} alt="Sophia Lee" className="w-16 h-16 rounded-full object-cover border-2 border-primary" />
-            <div>
-              <div className="font-bold text-lg">Sophia Lee</div>
-              <div className="text-sm text-muted-foreground mb-1">Yoga & Flexibility</div>
-              <div className="text-primary font-semibold">$30/session</div>
+            
+            <div className="card-gradient-glow rounded-2xl p-4 flex items-center gap-4 border border-primary/10 hover:border-primary/30 transition-all cursor-pointer">
+              <div className="relative">
+                <div className="absolute inset-0 bg-secondary/30 rounded-full blur-md"></div>
+                <img src={logoImage} alt="Liam Smith" className="relative w-14 h-14 rounded-full object-cover border-2 border-secondary" />
+              </div>
+              <div className="flex-1">
+                <div className="font-bold text-base">Liam Smith</div>
+                <div className="text-xs text-muted-foreground mb-1">Cardio & HIIT</div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs text-muted-foreground">4.8 (95 reviews)</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-primary font-bold text-lg">$35</div>
+                <div className="text-xs text-muted-foreground">/session</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-
 
       <BottomNav />
     </div>

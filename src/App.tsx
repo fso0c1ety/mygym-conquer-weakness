@@ -11,6 +11,7 @@ import WorkoutSession from "./pages/WorkoutSession";
 import Stats from "./pages/Stats";
 import Memberships from "./pages/Memberships";
 import DietPlans from "./pages/DietPlans";
+import Shop from "./pages/Shop";
 
 import OnlineTrainers from "./pages/OnlineTrainers";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/stats" element={<Stats />} />
           <Route path="/memberships" element={<Memberships />} />
           <Route path="/diet-plans" element={<DietPlans />} />
+          <Route path="/shop" element={<Shop />} />
           <Route path="/trainers" element={<OnlineTrainers />} />
           <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

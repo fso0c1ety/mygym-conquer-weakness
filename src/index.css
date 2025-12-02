@@ -8,50 +8,60 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MY GYM Dark Fitness Theme - Main colors */
-    --background: 0 0% 8%;
-    --foreground: 0 0% 100%;
+    /* Modern Gradient Dark Theme with Red Accents */
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
     
-    --card: 0 0% 11%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
     
-    --popover: 0 0% 11%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
     
-    /* Brand Red - Primary color */
-    --primary: 4 78% 47%;
+    /* Vibrant Red - Primary */
+    --primary: 0 84% 58%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 18%;
+    /* Deep Orange Accent */
+    --secondary: 15 85% 55%;
     --secondary-foreground: 0 0% 100%;
     
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 70%;
     
-    --accent: 4 78% 47%;
+    --accent: 15 85% 55%;
     --accent-foreground: 0 0% 100%;
     
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
     --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 4 78% 47%;
+    --input: 0 0% 16%;
+    --ring: 0 84% 58%;
     
-    --radius: 1rem;
+    --radius: 1.25rem;
     
-    /* Workout card accent colors */
-    --workout-purple: 270 60% 75%;
-    --workout-pink: 340 70% 70%;
-    --workout-yellow: 50 95% 70%;
-    --workout-green: 140 60% 70%;
+    /* Vibrant Gradient Colors */
+    --gradient-red: 0 84% 58%;
+    --gradient-orange: 15 85% 55%;
+    --gradient-pink: 330 75% 62%;
+    --gradient-crimson: 345 80% 55%;
+    
+    /* Workout card accent colors - More vibrant */
+    --workout-purple: 265 85% 68%;
+    --workout-pink: 330 85% 68%;
+    --workout-yellow: 45 100% 65%;
+    --workout-green: 150 70% 60%;
+    --workout-orange: 25 95% 62%;
+    --workout-cyan: 185 80% 60%;
     
     /* Progress and stats */
-    --progress-bg: 0 0% 18%;
-    --calories-text: 4 78% 47%;
+    --progress-bg: 0 0% 16%;
+    --calories-text: 0 84% 58%;
     
-    /* Shadow and glow */
-    --shadow-glow: 4 78% 47%;
+    /* Shadow and glow effects */
+    --shadow-glow-red: 0 84% 58%;
+    --shadow-glow-orange: 15 85% 55%;
   }
 }
 
@@ -63,6 +73,8 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, hsl(0 0% 6%) 0%, hsl(0 5% 8%) 50%, hsl(0 0% 6%) 100%);
+    background-attachment: fixed;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -71,18 +83,63 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  .text-gradient-red {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(4 78% 60%));
+  .text-gradient-primary {
+    background: linear-gradient(135deg, hsl(0 84% 58%), hsl(15 85% 55%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-secondary {
+    background: linear-gradient(135deg, hsl(345 80% 55%), hsl(330 75% 62%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
   .card-gradient {
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(0 0% 14%) 100%);
+    background: linear-gradient(145deg, hsl(0 0% 12%) 0%, hsl(0 0% 9%) 100%);
+    border: 1px solid hsl(0 0% 18%);
   }
   
-  .glow-red {
-    box-shadow: 0 0 20px rgba(195, 14, 14, 0.3);
+  .card-gradient-glow {
+    background: linear-gradient(145deg, hsl(0 0% 12%) 0%, hsl(0 0% 9%) 100%);
+    border: 1px solid hsl(0 84% 58% / 0.2);
+    box-shadow: 0 4px 24px -2px hsl(0 84% 58% / 0.1);
+  }
+  
+  .glow-primary {
+    box-shadow: 0 4px 32px -4px hsl(0 84% 58% / 0.35), 0 0 16px -2px hsl(15 85% 55% / 0.2);
+  }
+  
+  .glow-secondary {
+    box-shadow: 0 4px 32px -4px hsl(345 80% 55% / 0.35), 0 0 16px -2px hsl(330 75% 62% / 0.2);
+  }
+  
+  .gradient-border {
+    position: relative;
+    background: hsl(220 20% 10%);
+    border-radius: var(--radius);
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    padding: 2px;
+    background: linear-gradient(135deg, hsl(0 84% 58%), hsl(15 85% 55%));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
