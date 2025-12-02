@@ -32,14 +32,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-start sm:items-center justify-center p-3 sm:p-4 pt-8 sm:pt-4 relative overflow-y-auto">
       {/* Animated background blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -right-40 w-72 h-72 sm:w-96 sm:h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      <Card className="w-full max-w-md card-gradient-glow relative z-10 backdrop-blur-xl border-primary/20">
+      <Card className="w-full max-w-md card-gradient-glow relative z-10 backdrop-blur-xl border-primary/20 my-auto">
         <CardHeader className="space-y-4 sm:space-y-6 text-center">
           <div className="flex justify-center mb-1 sm:mb-2">
             <div className="relative">
