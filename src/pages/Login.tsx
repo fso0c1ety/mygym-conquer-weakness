@@ -32,26 +32,26 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative overflow-hidden">
       {/* Animated background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute -top-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -right-40 w-72 h-72 sm:w-96 sm:h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
       <Card className="w-full max-w-md card-gradient-glow relative z-10 backdrop-blur-xl border-primary/20">
-        <CardHeader className="space-y-6 text-center">
-          <div className="flex justify-center mb-2">
+        <CardHeader className="space-y-4 sm:space-y-6 text-center">
+          <div className="flex justify-center mb-1 sm:mb-2">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-              <div className="relative bg-gradient-to-br from-primary to-secondary p-4 rounded-2xl glow-primary">
-                <Dumbbell className="w-12 h-12 text-white" />
+              <div className="relative bg-gradient-to-br from-primary to-secondary p-3 sm:p-4 rounded-xl sm:rounded-2xl glow-primary">
+                <Dumbbell className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
               </div>
             </div>
           </div>
-          <div className="space-y-2">
-            <CardTitle className="text-3xl text-gradient-primary">Welcome Back</CardTitle>
-            <CardDescription className="text-base">Transform your fitness journey today</CardDescription>
+          <div className="space-y-1 sm:space-y-2">
+            <CardTitle className="text-2xl sm:text-3xl text-gradient-primary">Welcome Back</CardTitle>
+            <CardDescription className="text-sm sm:text-base">Transform your fitness journey today</CardDescription>
           </div>
         </CardHeader>
         <CardContent>

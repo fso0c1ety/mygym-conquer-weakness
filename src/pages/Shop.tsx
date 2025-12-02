@@ -79,11 +79,11 @@ const Shop = () => {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="px-6 pt-8 pb-6 sticky top-0 bg-background/80 backdrop-blur-xl border-b border-border/50 z-40">
-          <div className="flex items-center justify-between mb-4">
+        <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 sticky top-0 bg-background/80 backdrop-blur-xl border-b border-border/50 z-40">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gradient-primary">Shop</h1>
-              <p className="text-sm text-muted-foreground mt-1">Premium fitness nutrition</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary">Shop</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">Premium fitness nutrition</p>
             </div>
             <div className="relative">
               <Button 

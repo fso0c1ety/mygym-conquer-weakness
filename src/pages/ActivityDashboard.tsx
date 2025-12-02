@@ -33,18 +33,18 @@ const ActivityDashboard = () => {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="px-6 pt-8 pb-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
+        <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 rounded-xl blur-md"></div>
-                <div className="relative bg-gradient-to-br from-primary to-secondary p-2 rounded-xl">
-                  <img src={logoImage} alt="MY GYM" className="w-8 h-8 object-contain brightness-0 invert" />
+                <div className="relative bg-gradient-to-br from-primary to-secondary p-1.5 sm:p-2 rounded-xl">
+                  <img src={logoImage} alt="MY GYM" className="w-6 h-6 sm:w-8 sm:h-8 object-contain brightness-0 invert" />
                 </div>
               </div>
               <div>
                 <h2 className="text-xs text-muted-foreground">Your Activity</h2>
-                <h1 className="text-xl font-bold text-gradient-primary">May 2024</h1>
+                <h1 className="text-lg sm:text-xl font-bold text-gradient-primary">May 2024</h1>
               </div>
             </div>
             <Popover>
@@ -67,20 +67,20 @@ const ActivityDashboard = () => {
         </header>
 
         {/* Calendar */}
-        <div className="px-6 mb-6">
-          <div className="card-gradient-glow rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Calendar className="w-4 h-4 text-primary" />
+        <div className="px-4 sm:px-6 mb-4 sm:mb-6">
+          <div className="card-gradient-glow rounded-xl sm:rounded-2xl p-4 sm:p-5 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg">
+                <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
               </div>
-              <span className="text-sm font-semibold text-foreground">This Week</span>
+              <span className="text-xs sm:text-sm font-semibold text-foreground">This Week</span>
             </div>
-            <div className="grid grid-cols-6 gap-3">
+            <div className="grid grid-cols-6 gap-2 sm:gap-3">
               {daysOfWeek.map((day, idx) => (
                 <div key={idx} className="text-center">
-                  <div className="text-xs text-muted-foreground mb-2">{day}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground mb-1 sm:mb-2">{day}</div>
                   <div
-                    className={`w-11 h-11 mx-auto rounded-xl flex items-center justify-center font-semibold transition-all ${
+                    className={`w-9 h-9 sm:w-11 sm:h-11 mx-auto rounded-lg sm:rounded-xl flex items-center justify-center text-sm sm:text-base font-semibold transition-all ${
                       dates[idx] === today
                         ? "bg-gradient-to-br from-primary to-secondary text-white glow-primary scale-110"
                         : "bg-muted/50 text-foreground hover:bg-muted"
@@ -95,9 +95,9 @@ const ActivityDashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="px-6 mb-6">
+        <div className="px-4 sm:px-6 mb-4 sm:mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold text-foreground">Today's Stats</h2>
+            <h2 className="text-base sm:text-lg font-bold text-foreground">Today's Stats</h2>
             <TrendingUp className="w-5 h-5 text-primary" />
           </div>
           <div className="grid grid-cols-2 gap-4">

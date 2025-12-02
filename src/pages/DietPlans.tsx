@@ -27,23 +27,23 @@ const DietPlans = () => {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="px-6 pt-8 pb-6">
-          <div className="flex items-center gap-3 mb-6">
+        <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6">
+          <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-xl blur-md"></div>
-              <div className="relative bg-gradient-to-br from-primary to-secondary p-2 rounded-xl">
-                <Apple className="w-8 h-8 text-white" />
+              <div className="relative bg-gradient-to-br from-primary to-secondary p-1.5 sm:p-2 rounded-xl">
+                <Apple className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gradient-primary">Nutrition</h1>
-              <p className="text-sm text-muted-foreground">Fuel your transformation</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary">Nutrition</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">Fuel your transformation</p>
             </div>
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="card-gradient rounded-xl p-3 border border-primary/10">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <div className="card-gradient rounded-lg sm:rounded-xl p-2 sm:p-3 border border-primary/10">
               <div className="flex items-center gap-2 mb-1">
                 <Flame className="w-4 h-4 text-primary" />
               </div>
@@ -67,10 +67,10 @@ const DietPlans = () => {
           </div>
         </header>
 
-        <div className="px-6">
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-foreground mb-1">Meal Plans</h2>
-            <p className="text-sm text-muted-foreground">Choose the perfect plan for your goals</p>
+        <div className="px-4 sm:px-6">
+          <div className="mb-3 sm:mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">Meal Plans</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">Choose the perfect plan for your goals</p>
           </div>
 
           <div className="space-y-5">

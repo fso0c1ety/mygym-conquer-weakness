@@ -44,33 +44,33 @@ const Stats = () => {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="px-6 pt-8 pb-4">
-          <h1 className="text-3xl font-bold text-gradient-primary mb-1">Your Stats</h1>
-          <p className="text-muted-foreground">Track your fitness journey</p>
+        <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-3 sm:pb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gradient-primary mb-1">Your Stats</h1>
+          <p className="text-sm text-muted-foreground">Track your fitness journey</p>
         </header>
 
         {/* Workout Streak Hero */}
-        <div className="px-6 mb-6">
-          <div className="relative overflow-hidden card-gradient-glow rounded-2xl p-6 border-2 border-primary/30">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+        <div className="px-4 sm:px-6 mb-4 sm:mb-6">
+          <div className="relative overflow-hidden card-gradient-glow rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-primary/30">
+            <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-primary/20 rounded-full blur-3xl"></div>
             <div className="relative z-10 flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Flame className="w-6 h-6 text-primary" />
-                  <h3 className="text-lg font-semibold text-foreground">Current Streak</h3>
+                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground">Current Streak</h3>
                 </div>
-                <p className="text-6xl font-bold text-gradient-primary mb-2">{workoutStreak}</p>
-                <p className="text-sm text-muted-foreground">Days in a row - Keep crushing it!</p>
+                <p className="text-4xl sm:text-6xl font-bold text-gradient-primary mb-2">{workoutStreak}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Days in a row - Keep crushing it!</p>
               </div>
-              <div className="text-7xl opacity-20">🔥</div>
+              <div className="text-5xl sm:text-7xl opacity-20">🔥</div>
             </div>
           </div>
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="px-6 mb-6">
-          <h2 className="text-xl font-bold text-foreground mb-3">Quick Overview</h2>
-          <div className="grid grid-cols-2 gap-3">
+        <div className="px-4 sm:px-6 mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3">Quick Overview</h2>
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <div className="card-gradient rounded-xl p-4 border border-primary/10">
               <div className="flex items-center gap-2 mb-2">
                 <div className="p-1.5 bg-primary/20 rounded-lg">
