@@ -138,13 +138,13 @@ export default function OnlineTrainers() {
             {trainers.map((trainer) => (
               <div
                 key={trainer.id}
-                className="card-gradient-glow rounded-2xl p-5 border border-primary/10 hover:border-primary/30 transition-all group"
+                className="card-gradient-glow rounded-2xl p-4 sm:p-5 border border-primary/10 hover:border-primary/30 transition-all group"
               >
-                <div className="flex items-start gap-4 mb-4">
+                <div className="flex flex-col sm:flex-row items-start gap-4 mb-4">
                   {/* Trainer Avatar */}
                   <div className="relative flex-shrink-0">
                     <div className={`absolute inset-0 ${trainer.status === 'Online' ? 'bg-green-500/30' : 'bg-orange-500/30'} rounded-full blur-md`}></div>
-                    <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary p-0.5`}>
+                    <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-primary to-secondary p-0.5`}>
                       <img
                         src={trainer.image}
                         alt={trainer.name}
@@ -156,23 +156,23 @@ export default function OnlineTrainers() {
                   </div>
 
                   {/* Trainer Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1 min-w-0 w-full">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
                       <div>
-                        <h3 className="text-xl font-bold text-foreground mb-1">{trainer.name}</h3>
+                        <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1">{trainer.name}</h3>
                         <p className="text-sm text-muted-foreground">{trainer.specialty}</p>
                       </div>
-                      <Badge className={trainer.status === 'Online' ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-orange-500/20 text-orange-400 border-orange-500/30'}>
+                      <Badge className={trainer.status === 'Online' ? 'bg-green-500/20 text-green-400 border-green-500/30 w-fit' : 'bg-orange-500/20 text-orange-400 border-orange-500/30 w-fit'}>
                         {trainer.status}
                       </Badge>
                     </div>
 
                     {/* Rating */}
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                         <span className="text-sm font-semibold text-foreground">{trainer.rating}</span>
-                        <span className="text-xs text-muted-foreground">({trainer.reviews} reviews)</span>
+                        <span className="text-xs text-muted-foreground">({trainer.reviews})</span>
                       </div>
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Users className="w-4 h-4" />
@@ -190,40 +190,40 @@ export default function OnlineTrainers() {
                     </div>
 
                     {/* Stats Row */}
-                    <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 text-xs text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Award className="w-3.5 h-3.5" />
                         <span>{trainer.experience}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
-                        <span>{trainer.availability}</span>
+                        <span className="truncate max-w-[150px]">{trainer.availability}</span>
                       </div>
                     </div>
 
                     {/* Price & Actions */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div>
-                        <div className="text-2xl font-bold text-gradient-primary">
+                        <div className="text-xl sm:text-2xl font-bold text-gradient-primary">
                           ${trainer.price}
                         </div>
                         <div className="text-xs text-muted-foreground">per session</div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 w-full sm:w-auto">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-primary/30 hover:bg-primary/10"
+                          className="border-primary/30 hover:bg-primary/10 flex-1 sm:flex-none"
                         >
-                          <Video className="w-4 h-4 mr-1" />
-                          Book Session
+                          <Video className="w-4 h-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Book Session</span>
                         </Button>
                         <Button
                           size="sm"
-                          className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 glow-primary"
+                          className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 glow-primary flex-1 sm:flex-none"
                         >
-                          <MessageCircle className="w-4 h-4 mr-1" />
-                          Message
+                          <MessageCircle className="w-4 h-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Message</span>
                         </Button>
                       </div>
                     </div>
