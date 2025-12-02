@@ -54,3 +54,17 @@ jobs:
         with:
           name: app-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Create APK directory in repo
+        run: mkdir -p builds
+
+      - name: Copy APK to builds directory
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk builds/mygym-$(date +%Y%m%d-%H%M%S).apk
+
+      - name: Commit and push APK
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add builds/
+          git diff --staged --quiet || git commit -m "chore: add APK build from $(date +%Y-%m-%d)"
+          git push
