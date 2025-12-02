@@ -7,11 +7,29 @@ import { Badge } from '@/components/ui/badge';
 import { proteinProducts, Product } from '@/lib/products';
 import { useToast } from '@/components/ui/use-toast';
 
+// Import protein images
+import wheyChoco from '@/assets/Whey_Choco.webp';
+import designerWhey from '@/assets/Designer_Whey_Sb.webp';
+import veganProtein from '@/assets/66ea12214cab6f3a7024e8b7-flavcity-all-in-one-vegan-protein-powder.jpg';
+import massGainer from '@/assets/719ZohZN1iL._AC_UF894,1000_QL80_.jpg';
+
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [cart, setCart] = useState<{ [key: string]: number }>({});
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
+
+  // Map product images
+  const productImages: Record<string, string> = {
+    'protein-whey': wheyChoco,
+    'protein-casein': designerWhey,
+    'protein-plant': veganProtein,
+    'protein-mass': massGainer,
+    'supplement-bcaa': wheyChoco,
+    'supplement-creatine': designerWhey,
+    'preworkout-extreme': massGainer,
+    'accessory-shaker': veganProtein,
+  };
 
   const categories = [
     { id: 'all', label: 'All Products' },
@@ -122,9 +140,17 @@ const Shop = () => {
               >
                 {/* Product Image */}
                 <div className="relative h-48 bg-muted/30 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                    <div className="text-6xl">💪</div>
-                  </div>
+                  {productImages[product.image] ? (
+                    <img 
+                      src={productImages[product.image]} 
+                      alt={product.name}
+                      className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                      <div className="text-6xl">💪</div>
+                    </div>
+                  )}
                   
                   {/* Badge */}
                   {product.badge && (
