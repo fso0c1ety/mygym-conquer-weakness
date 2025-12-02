@@ -12,10 +12,11 @@ import Stats from "./pages/Stats";
 import Memberships from "./pages/Memberships";
 import DietPlans from "./pages/DietPlans";
 import Shop from "./pages/Shop";
-
+import Checkout from "./pages/Checkout";
 import OnlineTrainers from "./pages/OnlineTrainers";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -27,15 +28,16 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<ActivityDashboard />} />
-          <Route path="/workouts" element={<WorkoutPlan />} />
-          <Route path="/workout/:id" element={<WorkoutSession />} />
-          <Route path="/stats" element={<Stats />} />
-          <Route path="/memberships" element={<Memberships />} />
-          <Route path="/diet-plans" element={<DietPlans />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/trainers" element={<OnlineTrainers />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/dashboard" element={<ProtectedRoute><ActivityDashboard /></ProtectedRoute>} />
+          <Route path="/workouts" element={<ProtectedRoute><WorkoutPlan /></ProtectedRoute>} />
+          <Route path="/workout/:id" element={<ProtectedRoute><WorkoutSession /></ProtectedRoute>} />
+          <Route path="/stats" element={<ProtectedRoute><Stats /></ProtectedRoute>} />
+          <Route path="/memberships" element={<ProtectedRoute><Memberships /></ProtectedRoute>} />
+          <Route path="/diet-plans" element={<ProtectedRoute><DietPlans /></ProtectedRoute>} />
+          <Route path="/shop" element={<ProtectedRoute><Shop /></ProtectedRoute>} />
+          <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+          <Route path="/trainers" element={<ProtectedRoute><OnlineTrainers /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

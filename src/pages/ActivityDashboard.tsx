@@ -12,15 +12,54 @@ import workoutLunges from "@/assets/workout-lunges.jpg";
 import workoutPushups from "@/assets/workout-pushups.jpg";
 
 import { useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
 
 const ActivityDashboard = () => {
   const challenges = getTodaysChallenges();
   const progressPercent = (todayActivity.caloriesBurned / todayActivity.caloriesGoal) * 100;
   const navigate = useNavigate();
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const daysOfWeek = ["M", "T", "W", "T", "F", "S"];
-  const dates = [5, 16, 18, 20, 21, 22];
-  const today = 16;
+  // Get current week data
+  const weekData = useMemo(() => {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Calculate Monday of current week
+    
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+    
+    const daysOfWeek = ["M", "T", "W", "T", "F", "S"];
+    const dates = [];
+    
+    for (let i = 0; i < 6; i++) {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + i);
+      dates.push(date);
+    }
+    
+    return { daysOfWeek, dates, today };
+  }, []);
+
+  // Format month and year
+  const currentMonthYear = useMemo(() => {
+    const months = ["January", "February", "March", "April", "May", "June", 
+                   "July", "August", "September", "October", "November", "December"];
+    return `${months[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
+  }, [selectedDate]);
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+  };
+
+  const isSameDay = (date1: Date, date2: Date) => {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+  };
 
 
   return (
@@ -44,7 +83,7 @@ const ActivityDashboard = () => {
               </div>
               <div>
                 <h2 className="text-xs text-muted-foreground">Your Activity</h2>
-                <h1 className="text-lg sm:text-xl font-bold text-gradient-primary">May 2024</h1>
+                <h1 className="text-lg sm:text-xl font-bold text-gradient-primary">{currentMonthYear}</h1>
               </div>
             </div>
             <Popover>
@@ -76,20 +115,32 @@ const ActivityDashboard = () => {
               <span className="text-xs sm:text-sm font-semibold text-foreground">This Week</span>
             </div>
             <div className="grid grid-cols-6 gap-2 sm:gap-3">
-              {daysOfWeek.map((day, idx) => (
-                <div key={idx} className="text-center">
-                  <div className="text-[10px] sm:text-xs text-muted-foreground mb-1 sm:mb-2">{day}</div>
-                  <div
-                    className={`w-9 h-9 sm:w-11 sm:h-11 mx-auto rounded-lg sm:rounded-xl flex items-center justify-center text-sm sm:text-base font-semibold transition-all ${
-                      dates[idx] === today
-                        ? "bg-gradient-to-br from-primary to-secondary text-white glow-primary scale-110"
-                        : "bg-muted/50 text-foreground hover:bg-muted"
-                    }`}
+              {weekData.daysOfWeek.map((day, idx) => {
+                const date = weekData.dates[idx];
+                const isCurrentDay = isToday(date);
+                const isSelected = isSameDay(date, selectedDate);
+                
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedDate(date)}
+                    className="text-center focus:outline-none"
                   >
-                    {dates[idx]}
-                  </div>
-                </div>
-              ))}
+                    <div className="text-[10px] sm:text-xs text-muted-foreground mb-1 sm:mb-2">{day}</div>
+                    <div
+                      className={`w-9 h-9 sm:w-11 sm:h-11 mx-auto rounded-lg sm:rounded-xl flex items-center justify-center text-sm sm:text-base font-semibold transition-all cursor-pointer ${
+                        isCurrentDay
+                          ? "bg-gradient-to-br from-primary to-secondary text-white glow-primary scale-110"
+                          : isSelected
+                          ? "bg-primary/20 text-primary border-2 border-primary"
+                          : "bg-muted/50 text-foreground hover:bg-muted hover:scale-105"
+                      }`}
+                    >
+                      {date.getDate()}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

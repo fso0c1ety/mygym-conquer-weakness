@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
+import { useNavigate } from 'react-router-dom';
 import logo from "@/assets/logo.png";
 import { Dumbbell, Mail, Lock } from 'lucide-react';
 
@@ -11,17 +12,30 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (email === 'valonhalili74@gmail.com' && password === 'Valon1') {
+      // Set login state in localStorage
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userEmail', email);
+      
       toast({
         title: "Success",
         description: "Login successful! Redirecting...",
       });
       // Redirect to dashboard after successful login
-      window.location.href = '/dashboard';
+      navigate('/dashboard');
     } else {
       toast({
         title: "Error",

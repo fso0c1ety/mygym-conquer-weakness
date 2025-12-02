@@ -1,11 +1,27 @@
 import { useState } from 'react';
-import { ShoppingCart, Star, Filter, Search, Heart } from 'lucide-react';
+import { ShoppingCart, Star, Filter, Search, Heart, X, Plus, Minus, Trash2 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { proteinProducts, Product } from '@/lib/products';
 import { useToast } from '@/components/ui/use-toast';
+import { useNavigate } from 'react-router-dom';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Import protein images
 import wheyChoco from '@/assets/Whey_Choco.webp';
@@ -15,9 +31,14 @@ import massGainer from '@/assets/719ZohZN1iL._AC_UF894,1000_QL80_.jpg';
 
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [cart, setCart] = useState<{ [key: string]: number }>({});
+  const [cart, setCart] = useState<{ [key: string]: { product: Product; quantity: number; flavor?: string; size?: string } }>({});
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const [cartOpen, setCartOpen] = useState(false);
+  const [selectedFlavors, setSelectedFlavors] = useState<{ [key: string]: string }>({});
+  const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: string }>({});
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Map product images
   const productImages: Record<string, string> = {
@@ -46,15 +67,94 @@ const Shop = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const addToCart = (product: Product) => {
-    setCart(prev => ({ ...prev, [product.id]: (prev[product.id] || 0) + 1 }));
+  const addToCart = (product: Product, flavor?: string, size?: string) => {
+    const cartKey = `${product.id}-${flavor || 'default'}-${size || 'default'}`;
+    const price = size && product.sizePrices ? product.sizePrices[size] : product.price;
+    
+    setCart(prev => ({
+      ...prev,
+      [cartKey]: {
+        product: { ...product, price }, // Use size-specific price
+        quantity: (prev[cartKey]?.quantity || 0) + 1,
+        flavor,
+        size
+      }
+    }));
+    setCartOpen(true);
     toast({
       title: "Added to Cart",
-      description: `${product.name} added to your cart`,
+      description: `${product.name} ${flavor ? `(${flavor})` : ''} ${size ? `- ${size}` : ''} added to your cart`,
     });
   };
 
-  const totalItems = Object.values(cart).reduce((sum, count) => sum + count, 0);
+  const updateQuantity = (cartKey: string, change: number) => {
+    setCart(prev => {
+      const item = prev[cartKey];
+      if (!item) return prev;
+      
+      const newQuantity = item.quantity + change;
+      if (newQuantity <= 0) {
+        const { [cartKey]: _, ...rest } = prev;
+        return rest;
+      }
+      
+      return {
+        ...prev,
+        [cartKey]: { ...item, quantity: newQuantity }
+      };
+    });
+  };
+
+  const removeFromCart = (cartKey: string) => {
+    setCart(prev => {
+      const { [cartKey]: _, ...rest } = prev;
+      return rest;
+    });
+    toast({
+      title: "Removed from Cart",
+      description: "Item removed successfully",
+    });
+  };
+
+  const toggleWishlist = (productId: string) => {
+    setWishlist(prev => {
+      const newWishlist = new Set(prev);
+      if (newWishlist.has(productId)) {
+        newWishlist.delete(productId);
+        toast({
+          title: "Removed from Wishlist",
+        });
+      } else {
+        newWishlist.add(productId);
+        toast({
+          title: "Added to Wishlist",
+        });
+      }
+      return newWishlist;
+    });
+  };
+
+  const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = Object.values(cart).reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+  const handleCheckout = () => {
+    if (Object.keys(cart).length === 0) {
+      toast({
+        title: "Cart is empty",
+        description: "Please add items to your cart before checkout",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Navigate to checkout page with cart data
+    navigate('/checkout', {
+      state: {
+        cart,
+        totalPrice
+      }
+    });
+  };
 
   const getBadgeColor = (badge?: string) => {
     switch (badge) {
@@ -86,17 +186,124 @@ const Shop = () => {
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">Premium fitness nutrition</p>
             </div>
             <div className="relative">
-              <Button 
-                size="icon" 
-                className="bg-gradient-to-br from-primary to-secondary glow-primary relative"
-              >
-                <ShoppingCart className="w-5 h-5" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full text-xs flex items-center justify-center font-bold">
-                    {totalItems}
-                  </span>
-                )}
-              </Button>
+              <Sheet open={cartOpen} onOpenChange={setCartOpen}>
+                <SheetTrigger asChild>
+                  <Button 
+                    size="icon" 
+                    className="bg-gradient-to-br from-primary to-secondary glow-primary relative"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    {totalItems > 0 && (
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full text-xs flex items-center justify-center font-bold">
+                        {totalItems}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-full sm:max-w-lg">
+                  <SheetHeader>
+                    <SheetTitle>Shopping Cart</SheetTitle>
+                    <SheetDescription>
+                      {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
+                    </SheetDescription>
+                  </SheetHeader>
+                  
+                  <div className="mt-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                    {Object.entries(cart).length === 0 ? (
+                      <div className="text-center py-12">
+                        <ShoppingCart className="w-16 h-16 mx-auto text-muted-foreground opacity-50 mb-4" />
+                        <p className="text-muted-foreground">Your cart is empty</p>
+                      </div>
+                    ) : (
+                      Object.entries(cart).map(([key, item]) => (
+                        <div key={key} className="card-gradient rounded-xl p-4 border border-border/50">
+                          <div className="flex gap-3">
+                            <div className="w-20 h-20 bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                              {productImages[item.product.image] ? (
+                                <img 
+                                  src={productImages[item.product.image]} 
+                                  alt={item.product.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <span className="text-3xl">💪</span>
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-sm mb-1">{item.product.name}</h4>
+                              {item.flavor && (
+                                <p className="text-xs text-muted-foreground">Flavor: {item.flavor}</p>
+                              )}
+                              {item.size && (
+                                <p className="text-xs text-muted-foreground">Size: {item.size}</p>
+                              )}
+                              <div className="flex items-center gap-2 mt-2">
+                                <Button 
+                                  size="icon" 
+                                  variant="outline" 
+                                  className="h-7 w-7"
+                                  onClick={() => updateQuantity(key, -1)}
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </Button>
+                                <span className="text-sm font-semibold w-8 text-center">{item.quantity}</span>
+                                <Button 
+                                  size="icon" 
+                                  variant="outline" 
+                                  className="h-7 w-7"
+                                  onClick={() => updateQuantity(key, 1)}
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-7 w-7 ml-auto text-destructive"
+                                  onClick={() => removeFromCart(key)}
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-primary">${(item.product.price * item.quantity).toFixed(2)}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  
+                  {Object.entries(cart).length > 0 && (
+                    <div className="mt-6 border-t border-border/50 pt-6">
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Subtotal:</span>
+                          <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Shipping:</span>
+                          <span className="font-semibold text-green-500">FREE</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Tax:</span>
+                          <span className="font-semibold">${(totalPrice * 0.1).toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between mb-4 pt-4 border-t border-border/50">
+                        <span className="text-lg font-semibold">Total:</span>
+                        <span className="text-2xl font-bold text-gradient-primary">${(totalPrice * 1.1).toFixed(2)}</span>
+                      </div>
+                      <Button 
+                        onClick={handleCheckout}
+                        className="w-full bg-gradient-to-r from-primary to-secondary glow-primary h-12 text-base font-bold"
+                      >
+                        Checkout
+                      </Button>
+                    </div>
+                  )}
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 
@@ -163,9 +370,14 @@ const Shop = () => {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="absolute top-3 right-3 bg-background/80 backdrop-blur-sm hover:bg-background"
+                    onClick={() => toggleWishlist(product.id)}
+                    className={`absolute top-3 right-3 backdrop-blur-sm transition-colors ${
+                      wishlist.has(product.id) 
+                        ? 'bg-primary/20 hover:bg-primary/30' 
+                        : 'bg-background/80 hover:bg-background'
+                    }`}
                   >
-                    <Heart className="w-4 h-4" />
+                    <Heart className={`w-4 h-4 ${wishlist.has(product.id) ? 'fill-primary text-primary' : ''}`} />
                   </Button>
 
                   {/* Stock Status */}
@@ -195,21 +407,45 @@ const Shop = () => {
                   </div>
 
                   {/* Flavors/Sizes */}
-                  {product.flavors && (
+                  {product.flavors && product.flavors.length > 0 && (
                     <div className="mb-3">
-                      <p className="text-xs text-muted-foreground mb-1">Flavors:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {product.flavors.slice(0, 3).map(flavor => (
-                          <Badge key={flavor} variant="outline" className="text-xs border-border/50">
-                            {flavor}
-                          </Badge>
-                        ))}
-                        {product.flavors.length > 3 && (
-                          <Badge variant="outline" className="text-xs border-border/50">
-                            +{product.flavors.length - 3}
-                          </Badge>
-                        )}
-                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">Select Flavor:</p>
+                      <Select 
+                        value={selectedFlavors[product.id] || product.flavors[0]}
+                        onValueChange={(value) => setSelectedFlavors(prev => ({ ...prev, [product.id]: value }))}
+                      >
+                        <SelectTrigger className="h-9 text-sm">
+                          <SelectValue placeholder="Select flavor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {product.flavors.map(flavor => (
+                            <SelectItem key={flavor} value={flavor}>
+                              {flavor}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {product.sizes && product.sizes.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-xs text-muted-foreground mb-2">Select Size:</p>
+                      <Select 
+                        value={selectedSizes[product.id] || product.sizes[0]}
+                        onValueChange={(value) => setSelectedSizes(prev => ({ ...prev, [product.id]: value }))}
+                      >
+                        <SelectTrigger className="h-9 text-sm">
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {product.sizes.map(size => (
+                            <SelectItem key={size} value={size}>
+                              {size}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   )}
 
@@ -218,7 +454,10 @@ const Shop = () => {
                     <div>
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl font-bold text-gradient-primary">
-                          ${product.price}
+                          ${(() => {
+                            const size = selectedSizes[product.id] || (product.sizes && product.sizes[0]);
+                            return size && product.sizePrices ? product.sizePrices[size].toFixed(2) : product.price.toFixed(2);
+                          })()}
                         </span>
                         {product.originalPrice && (
                           <span className="text-sm text-muted-foreground line-through">
@@ -228,7 +467,11 @@ const Shop = () => {
                       </div>
                     </div>
                     <Button
-                      onClick={() => addToCart(product)}
+                      onClick={() => addToCart(
+                        product, 
+                        product.flavors ? (selectedFlavors[product.id] || product.flavors[0]) : undefined,
+                        product.sizes ? (selectedSizes[product.id] || product.sizes[0]) : undefined
+                      )}
                       disabled={!product.inStock}
                       className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 glow-primary"
                     >

@@ -12,6 +12,7 @@ export interface Product {
   badge?: 'Best Seller' | 'New' | 'Sale';
   flavors?: string[];
   sizes?: string[];
+  sizePrices?: { [size: string]: number };
 }
 
 export const proteinProducts: Product[] = [
@@ -28,7 +29,8 @@ export const proteinProducts: Product[] = [
     inStock: true,
     badge: 'Best Seller',
     flavors: ['Chocolate', 'Vanilla', 'Strawberry', 'Cookies & Cream'],
-    sizes: ['1kg', '2kg', '5kg']
+    sizes: ['1kg', '2kg', '5kg'],
+    sizePrices: { '1kg': 29.99, '2kg': 49.99, '5kg': 99.99 }
   },
   {
     id: 'casein-1',
@@ -43,7 +45,8 @@ export const proteinProducts: Product[] = [
     inStock: true,
     badge: 'Sale',
     flavors: ['Chocolate', 'Vanilla'],
-    sizes: ['1kg', '2kg']
+    sizes: ['1kg', '2kg'],
+    sizePrices: { '1kg': 24.99, '2kg': 44.99 }
   },
   {
     id: 'plant-1',
@@ -57,7 +60,8 @@ export const proteinProducts: Product[] = [
     inStock: true,
     badge: 'New',
     flavors: ['Chocolate', 'Vanilla', 'Berry'],
-    sizes: ['1kg', '2kg']
+    sizes: ['1kg', '2kg'],
+    sizePrices: { '1kg': 24.99, '2kg': 39.99 }
   },
   {
     id: 'mass-1',
@@ -70,7 +74,8 @@ export const proteinProducts: Product[] = [
     reviews: 221,
     inStock: true,
     flavors: ['Chocolate', 'Vanilla', 'Banana'],
-    sizes: ['3kg', '5kg']
+    sizes: ['3kg', '5kg'],
+    sizePrices: { '3kg': 54.99, '5kg': 84.99 }
   },
   {
     id: 'bcaa-1',
@@ -85,7 +90,8 @@ export const proteinProducts: Product[] = [
     inStock: true,
     badge: 'Sale',
     flavors: ['Lemon', 'Watermelon', 'Grape'],
-    sizes: ['300g', '500g']
+    sizes: ['300g', '500g'],
+    sizePrices: { '300g': 19.99, '500g': 29.99 }
   },
   {
     id: 'creatine-1',
@@ -98,7 +104,8 @@ export const proteinProducts: Product[] = [
     reviews: 412,
     inStock: true,
     badge: 'Best Seller',
-    sizes: ['250g', '500g', '1kg']
+    sizes: ['250g', '500g', '1kg'],
+    sizePrices: { '250g': 14.99, '500g': 24.99, '1kg': 39.99 }
   },
   {
     id: 'pre-1',
@@ -112,7 +119,8 @@ export const proteinProducts: Product[] = [
     inStock: true,
     badge: 'Best Seller',
     flavors: ['Fruit Punch', 'Blue Raspberry', 'Green Apple'],
-    sizes: ['300g', '600g']
+    sizes: ['300g', '600g'],
+    sizePrices: { '300g': 34.99, '600g': 59.99 }
   },
   {
     id: 'shaker-1',
