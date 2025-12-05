@@ -338,20 +338,21 @@ const Shop = () => {
         </header>
 
         {/* Products Grid */}
-        <div className="px-6 py-6">
+        <div className="px-4 sm:px-6 py-4 sm:py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filteredProducts.map(product => (
               <div
                 key={product.id}
-                className="card-gradient-glow rounded-2xl overflow-hidden border border-primary/10 hover:border-primary/30 transition-all group"
+                className="card-gradient-glow rounded-xl sm:rounded-2xl overflow-hidden border border-primary/10 hover:border-primary/30 transition-all group"
               >
                 {/* Product Image */}
-                <div className="relative h-48 bg-muted/30 overflow-hidden">
+                <div className="relative h-40 sm:h-48 bg-muted/30 overflow-hidden">
                   {productImages[product.image] ? (
                     <img 
                       src={productImages[product.image]} 
                       alt={product.name}
-                      className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                      className="w-full h-full object-contain p-3 sm:p-4 transition-transform duration-300 group-hover:scale-110"
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
@@ -361,7 +362,7 @@ const Shop = () => {
                   
                   {/* Badge */}
                   {product.badge && (
-                    <Badge className={`absolute top-3 left-3 ${getBadgeColor(product.badge)} border`}>
+                    <Badge className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${getBadgeColor(product.badge)} border text-xs`}>
                       {product.badge}
                     </Badge>
                   )}
@@ -371,7 +372,7 @@ const Shop = () => {
                     size="icon"
                     variant="ghost"
                     onClick={() => toggleWishlist(product.id)}
-                    className={`absolute top-3 right-3 backdrop-blur-sm transition-colors ${
+                    className={`absolute top-2 sm:top-3 right-2 sm:right-3 h-8 w-8 sm:h-10 sm:w-10 backdrop-blur-sm transition-colors ${
                       wishlist.has(product.id) 
                         ? 'bg-primary/20 hover:bg-primary/30' 
                         : 'bg-background/80 hover:bg-background'
@@ -390,10 +391,10 @@ const Shop = () => {
 
                 {/* Product Info */}
                 <div className="p-3 sm:p-4">
-                  <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+                  <h3 className="font-bold text-base sm:text-lg mb-1 group-hover:text-primary transition-colors line-clamp-1">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">
                     {product.description}
                   </p>
 

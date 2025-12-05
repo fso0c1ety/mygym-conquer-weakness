@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Play, Pause, X, Flame, Timer, Trophy, CheckCircle2, ChevronRight, SkipForward, Video } from "lucide-react";
 import { workouts } from "@/lib/workouts";
@@ -75,18 +75,29 @@ const WorkoutSession = () => {
 
   const currentExercise = workout.exercises[currentExerciseIndex];
   const totalExercises = workout.exercises.length;
-  const caloriesBurned = Math.round((workoutTime / 60) * (workout.calories / workout.duration));
   
-  // Calculate overall progress
-  const totalSets = workout.exercises.reduce((acc, ex) => acc + ex.sets, 0);
+  // Memoize expensive calculations
+  const caloriesBurned = useMemo(
+    () => Math.round((workoutTime / 60) * (workout.calories / workout.duration)),
+    [workoutTime, workout.calories, workout.duration]
+  );
+  
+  const totalSets = useMemo(
+    () => workout.exercises.reduce((acc, ex) => acc + ex.sets, 0),
+    [workout.exercises]
+  );
+  
   const completedSetsCount = completedSets.size;
-  const overallProgress = (completedSetsCount / totalSets) * 100;
+  const overallProgress = useMemo(
+    () => (completedSetsCount / totalSets) * 100,
+    [completedSetsCount, totalSets]
+  );
 
-  const formatTime = (seconds: number) => {
+  const formatTime = useCallback((seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
+  }, []);
 
   const handleCompleteSet = () => {
     const setKey = `${currentExerciseIndex}-${currentSet}`;
@@ -164,9 +175,9 @@ const WorkoutSession = () => {
     }
   };
 
-  const isSetComplete = (exerciseIdx: number, setNum: number) => {
+  const isSetComplete = useCallback((exerciseIdx: number, setNum: number) => {
     return completedSets.has(`${exerciseIdx}-${setNum}`);
-  };
+  }, [completedSets]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden pb-safe">
@@ -237,12 +248,13 @@ const WorkoutSession = () => {
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mb-4">
               {Array.from({ length: currentExercise.sets }).map((_, idx) => {
                 const setNum = idx + 1;
+                const setKey = `${currentExerciseIndex}-${setNum}`;
                 const isComplete = isSetComplete(currentExerciseIndex, setNum);
                 const isCurrent = setNum === currentSet;
                 
                 return (
                   <div
-                    key={setNum}
+                    key={setKey}
                     className={`p-3 rounded-xl border-2 transition-all ${
                       isComplete
                         ? 'bg-green-500/20 border-green-500/50'
