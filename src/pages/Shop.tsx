@@ -170,14 +170,14 @@ const Shop = () => {
   };
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 overflow-x-hidden">
       {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-40 left-10 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 overflow-x-hidden">
         {/* Header */}
         <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 sticky top-0 bg-background/80 backdrop-blur-xl border-b border-border/50 z-40">
           <div className="flex items-center justify-between mb-3 sm:mb-4">
@@ -312,14 +312,14 @@ const Shop = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               placeholder="Search products..."
-              className="pl-10 h-12 bg-muted/50 border-border/50"
+              className="pl-10 h-12 bg-muted/50 border-border/50 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           {/* Category Filter */}
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 -mr-6 pr-6">
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
             {categories.map(cat => (
               <Button
                 key={cat.id}
@@ -338,12 +338,12 @@ const Shop = () => {
         </header>
 
         {/* Products Grid */}
-        <div className="px-4 sm:px-6 py-4 sm:py-6">
+        <div className="px-4 sm:px-6 py-4 sm:py-6 max-w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filteredProducts.map(product => (
               <div
                 key={product.id}
-                className="card-gradient-glow rounded-xl sm:rounded-2xl overflow-hidden border border-primary/10 hover:border-primary/30 transition-all group"
+                className="card-gradient-glow rounded-xl sm:rounded-2xl overflow-hidden border border-primary/10 hover:border-primary/30 transition-all group max-w-full"
               >
                 {/* Product Image */}
                 <div className="relative h-40 sm:h-48 bg-muted/30 overflow-hidden">
@@ -391,7 +391,7 @@ const Shop = () => {
 
                 {/* Product Info */}
                 <div className="p-3 sm:p-4">
-                  <h3 className="font-bold text-base sm:text-lg mb-1 group-hover:text-primary transition-colors line-clamp-1">
+                  <h3 className="font-bold text-base sm:text-lg mb-1 group-hover:text-primary transition-colors line-clamp-1 break-words">
                     {product.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2">
