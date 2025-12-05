@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Workout } from "@/lib/workouts";
 import { Clock, Zap, TrendingUp, Bell, BellOff } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { getWorkoutReminder, saveWorkoutReminder, deleteWorkoutReminder, requestWorkoutNotificationPermission } from "@/lib/workoutReminders";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ interface WorkoutCardProps {
   workout: Workout;
 }
 
-const WorkoutCard = ({ workout }: WorkoutCardProps) => {
+const WorkoutCard = memo(({ workout }: WorkoutCardProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [reminderDialogOpen, setReminderDialogOpen] = useState(false);
@@ -293,6 +293,8 @@ const WorkoutCard = ({ workout }: WorkoutCardProps) => {
     </Dialog>
   </>
   );
-};
+});
+
+WorkoutCard.displayName = 'WorkoutCard';
 
 export default WorkoutCard;

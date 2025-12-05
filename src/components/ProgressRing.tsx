@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 
 interface ProgressRingProps {
   progress: number;
@@ -6,7 +6,7 @@ interface ProgressRingProps {
   strokeWidth?: number;
 }
 
-const ProgressRing = ({ progress, size = 120, strokeWidth = 12 }: ProgressRingProps) => {
+const ProgressRing = memo(({ progress, size = 120, strokeWidth = 12 }: ProgressRingProps) => {
   const [offset, setOffset] = useState(0);
   const center = size / 2;
   const radius = center - strokeWidth / 2;
@@ -48,6 +48,8 @@ const ProgressRing = ({ progress, size = 120, strokeWidth = 12 }: ProgressRingPr
       </div>
     </div>
   );
-};
+});
+
+ProgressRing.displayName = 'ProgressRing';
 
 export default ProgressRing;

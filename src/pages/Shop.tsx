@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { ShoppingCart, Star, Filter, Search, Heart, X, Plus, Minus, Trash2 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
@@ -60,14 +60,14 @@ const Shop = () => {
     { id: 'accessories', label: 'Accessories' }
   ];
 
-  const filteredProducts = proteinProducts.filter(product => {
+  const filteredProducts = useMemo(() => proteinProducts.filter(product => {
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }), [selectedCategory, searchQuery]);
 
-  const addToCart = (product: Product, flavor?: string, size?: string) => {
+  const addToCart = useCallback((product: Product, flavor?: string, size?: string) => {
     const cartKey = `${product.id}-${flavor || 'default'}-${size || 'default'}`;
     const price = size && product.sizePrices ? product.sizePrices[size] : product.price;
     
@@ -85,9 +85,9 @@ const Shop = () => {
       title: "Added to Cart",
       description: `${product.name} ${flavor ? `(${flavor})` : ''} ${size ? `- ${size}` : ''} added to your cart`,
     });
-  };
+  }, [toast]);
 
-  const updateQuantity = (cartKey: string, change: number) => {
+  const updateQuantity = useCallback((cartKey: string, change: number) => {
     setCart(prev => {
       const item = prev[cartKey];
       if (!item) return prev;
@@ -103,9 +103,9 @@ const Shop = () => {
         [cartKey]: { ...item, quantity: newQuantity }
       };
     });
-  };
+  }, []);
 
-  const removeFromCart = (cartKey: string) => {
+  const removeFromCart = useCallback((cartKey: string) => {
     setCart(prev => {
       const { [cartKey]: _, ...rest } = prev;
       return rest;
@@ -114,9 +114,9 @@ const Shop = () => {
       title: "Removed from Cart",
       description: "Item removed successfully",
     });
-  };
+  }, [toast]);
 
-  const toggleWishlist = (productId: string) => {
+  const toggleWishlist = useCallback((productId: string) => {
     setWishlist(prev => {
       const newWishlist = new Set(prev);
       if (newWishlist.has(productId)) {
@@ -132,12 +132,12 @@ const Shop = () => {
       }
       return newWishlist;
     });
-  };
+  }, [toast]);
 
-  const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = Object.values(cart).reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  const totalItems = useMemo(() => Object.values(cart).reduce((sum, item) => sum + item.quantity, 0), [cart]);
+  const totalPrice = useMemo(() => Object.values(cart).reduce((sum, item) => sum + (item.product.price * item.quantity), 0), [cart]);
 
-  const handleCheckout = () => {
+  const handleCheckout = useCallback(() => {
     if (Object.keys(cart).length === 0) {
       toast({
         title: "Cart is empty",
@@ -154,7 +154,7 @@ const Shop = () => {
         totalPrice
       }
     });
-  };
+  }, [cart, totalPrice, navigate, toast]);
 
   const getBadgeColor = (badge?: string) => {
     switch (badge) {
@@ -171,11 +171,8 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen pb-24 overflow-x-hidden">
-      {/* Animated background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 left-10 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-      </div>
+      {/* Static Background Gradient */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-primary/5 via-background to-secondary/5 pointer-events-none"></div>
 
       <div className="relative z-10 overflow-x-hidden">
         {/* Header */}

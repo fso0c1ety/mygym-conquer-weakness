@@ -181,11 +181,8 @@ const WorkoutSession = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden pb-safe">
-      {/* Animated background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 left-10 w-64 h-64 bg-secondary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-      </div>
+      {/* Static Background Gradient */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-primary/5 via-background to-secondary/5 pointer-events-none"></div>
 
       <div className="relative z-10 flex flex-col h-screen">
         {/* Header */}
