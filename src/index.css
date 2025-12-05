@@ -80,6 +80,12 @@ All colors MUST be HSL.
     /* Safe area for mobile devices (notches, status bar) */
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    /* Performance optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overscroll-behavior: none;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -146,5 +152,25 @@ All colors MUST be HSL.
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  
+  /* Smooth scrolling for all elements */
+  * {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hardware acceleration for transforms */
+  .transform,
+  [class*="transform"] {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Optimize button interactions */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
 }
