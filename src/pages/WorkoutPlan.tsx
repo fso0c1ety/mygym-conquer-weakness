@@ -132,43 +132,54 @@ const WorkoutPlan = () => {
         <div className="px-4 sm:px-6 mb-4 sm:mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-2xl font-bold text-foreground">Your Workouts</h3>
-              <p className="text-sm text-muted-foreground">{totalWorkouts} exercises available</p>
+              <h3 className="text-2xl font-bold text-foreground">Workout Library</h3>
+              <p className="text-sm text-muted-foreground">{filteredWorkouts.length} exercises</p>
             </div>
-            <TrendingUp className="w-5 h-5 text-primary" />
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg border border-primary/20">
+              <Dumbbell className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold text-primary">{totalWorkouts} Total</span>
+            </div>
           </div>
           
-          {/* Category Tabs */}
-          <div className="flex gap-2 mb-6 overflow-x-auto hide-scrollbar pb-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveTab(category)}
-                className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
-                  activeTab === category
-                    ? "bg-gradient-to-r from-primary to-secondary text-white glow-primary"
-                    : "bg-card/50 backdrop-blur-sm text-foreground hover:bg-card border border-border/50"
-                }`}
-              >
-                {category !== "all" && (
-                  <span className="text-lg">{getCategoryIcon(category as WorkoutCategory)}</span>
-                )}
-                {category === "all" ? "All Workouts" : getCategoryLabel(category as WorkoutCategory)}
-              </button>
-            ))}
+          {/* Category Pills - Horizontal Scroll */}
+          <div className="relative mb-6">
+            <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveTab(category)}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                    activeTab === category
+                      ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30"
+                      : "bg-card/80 backdrop-blur-sm text-muted-foreground hover:text-foreground hover:bg-card border border-border/50"
+                  }`}
+                >
+                  {category !== "all" && (
+                    <span className="text-base">{getCategoryIcon(category as WorkoutCategory)}</span>
+                  )}
+                  {category === "all" ? "All" : getCategoryLabel(category as WorkoutCategory)}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Workout Cards */}
-          <div className="space-y-4">
+          {/* Workout Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {filteredWorkouts.map((workout) => (
               <WorkoutCard key={workout.id} workout={workout} />
             ))}
           </div>
 
           {filteredWorkouts.length === 0 && (
-            <div className="text-center py-12 card-gradient rounded-2xl border border-border/50">
-              <Dumbbell className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <p className="text-muted-foreground">No workouts in this category</p>
+            <div className="text-center py-16 card-gradient rounded-2xl border border-border/50">
+              <div className="relative inline-flex mb-4">
+                <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl"></div>
+                <div className="relative p-4 bg-card rounded-full">
+                  <Dumbbell className="w-12 h-12 text-primary" />
+                </div>
+              </div>
+              <p className="text-lg font-semibold text-foreground mb-1">No workouts found</p>
+              <p className="text-sm text-muted-foreground">Try selecting a different category</p>
             </div>
           )}
         </div>

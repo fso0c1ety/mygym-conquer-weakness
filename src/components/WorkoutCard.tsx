@@ -165,73 +165,84 @@ const WorkoutCard = memo(({ workout }: WorkoutCardProps) => {
     <>
       <div
         onClick={() => navigate(`/workout/${workout.id}`)}
-        className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${getColorClass(workout.color)} border backdrop-blur-sm p-5 cursor-pointer transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] ${getGlowClass(workout.color)}`}
+        className={`group relative overflow-hidden rounded-xl bg-gradient-to-br ${getColorClass(workout.color)} border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${getGlowClass(workout.color)}`}
       >
         {/* Reminder badge */}
         {hasReminder && (
-          <div className="absolute top-3 right-3 z-20">
-            <div className="bg-green-500/20 backdrop-blur-sm text-green-400 border border-green-500/30 rounded-full p-1.5">
+          <div className="absolute top-2 right-2 z-20">
+            <div className="bg-green-500/90 backdrop-blur-sm text-white rounded-full p-1">
               <Bell className="w-3 h-3" />
             </div>
           </div>
         )}
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none"></div>
-      
-      <div className="relative z-10">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-xl font-bold text-foreground">{workout.title}</h3>
-              <span className={`text-xs px-2 py-1 rounded-full border ${getDifficultyColor(workout.difficulty)} font-semibold uppercase tracking-wide`}>
+        
+        {/* Workout Image */}
+        {workout.image && (
+          <div className="relative h-32 sm:h-40 overflow-hidden">
+            <img
+              src={getImagePath()}
+              alt={workout.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
+            
+            {/* Difficulty Badge on Image */}
+            <div className="absolute top-2 left-2">
+              <span className={`text-xs px-2.5 py-1 rounded-full border backdrop-blur-md ${getDifficultyColor(workout.difficulty)} font-bold uppercase tracking-wide shadow-lg`}>
                 {workout.difficulty}
               </span>
             </div>
-            {workout.description && (
-              <p className="text-sm text-muted-foreground mb-2">{workout.description}</p>
-            )}
-            <p className="text-xs text-muted-foreground line-clamp-1">
-              {workout.exercises.map(e => e.name).join(" • ")}
-            </p>
           </div>
-        </div>
+        )}
+      
+        {/* Content */}
+        <div className="relative z-10 p-4">
+          <div className="mb-3">
+            <h3 className="text-lg font-bold text-foreground mb-1 line-clamp-1">{workout.title}</h3>
+            {workout.description && (
+              <p className="text-xs text-muted-foreground line-clamp-2">{workout.description}</p>
+            )}
+          </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 bg-background/60 backdrop-blur-sm rounded-full px-3 py-1.5 border border-border/50">
+          {/* Stats Row */}
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-1.5 bg-background/60 backdrop-blur-sm rounded-lg px-2.5 py-1.5 border border-border/50 flex-1">
               <Clock className="w-3.5 h-3.5 text-primary" />
-              <span className="text-sm font-bold text-foreground">{workout.duration}</span>
+              <span className="text-xs font-bold text-foreground">{workout.duration}</span>
               <span className="text-xs text-muted-foreground">min</span>
             </div>
-            <div className="flex items-center gap-2 bg-background/60 backdrop-blur-sm rounded-full px-3 py-1.5 border border-border/50">
+            <div className="flex items-center gap-1.5 bg-background/60 backdrop-blur-sm rounded-lg px-2.5 py-1.5 border border-border/50 flex-1">
               <Zap className="w-3.5 h-3.5 text-orange-500" />
-              <span className="text-sm font-bold text-foreground">{workout.calories}</span>
+              <span className="text-xs font-bold text-foreground">{workout.calories}</span>
               <span className="text-xs text-muted-foreground">cal</span>
             </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/workout/${workout.id}`);
+              }}
+              className="flex-1 bg-gradient-to-r from-primary to-secondary text-white text-sm font-bold py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all"
+            >
+              Start Workout
+            </button>
             <button
               onClick={handleSetReminder}
-              className={`flex items-center gap-2 rounded-full px-3 py-1.5 border transition-all ${
+              className={`p-2 rounded-lg border transition-all ${
                 hasReminder 
-                  ? 'bg-green-500/20 border-green-500/30 text-green-400' 
-                  : 'bg-background/60 backdrop-blur-sm border-border/50 text-muted-foreground hover:text-primary'
+                  ? 'bg-green-500/20 border-green-500/40 text-green-400' 
+                  : 'bg-background/60 backdrop-blur-sm border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30'
               }`}
             >
-              {hasReminder ? <Bell className="w-3.5 h-3.5" /> : <BellOff className="w-3.5 h-3.5" />}
+              {hasReminder ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
             </button>
           </div>
-          
-          {workout.image && (
-            <div className="w-20 h-20 rounded-xl overflow-hidden ring-2 ring-white/10 shadow-lg">
-              <img
-                src={getImagePath()}
-                alt={workout.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
         </div>
       </div>
-    </div>
     
     {/* Reminder Dialog */}
     <Dialog open={reminderDialogOpen} onOpenChange={setReminderDialogOpen}>
