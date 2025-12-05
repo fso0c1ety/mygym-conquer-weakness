@@ -18,10 +18,26 @@ export interface DailyStats {
   minutes: number;
 }
 
-// Get all workout history from localStorage
+// Cache for workout history (reduces localStorage reads)
+let historyCache: WorkoutHistory[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION = 2000; // 2 seconds
+
+// Get all workout history from localStorage with caching
 export const getWorkoutHistory = (): WorkoutHistory[] => {
+  const now = Date.now();
+  
+  // Return cached data if still valid
+  if (historyCache && now - cacheTimestamp < CACHE_DURATION) {
+    return historyCache;
+  }
+  
+  // Read from localStorage
   const history = localStorage.getItem(getUserKey('workoutHistory'));
-  return history ? JSON.parse(history) : [];
+  historyCache = history ? JSON.parse(history) : [];
+  cacheTimestamp = now;
+  
+  return historyCache;
 };
 
 // Save workout to history
@@ -29,6 +45,10 @@ export const saveWorkoutToHistory = (workout: WorkoutHistory) => {
   const history = getWorkoutHistory();
   history.push(workout);
   localStorage.setItem(getUserKey('workoutHistory'), JSON.stringify(history));
+  
+  // Update cache
+  historyCache = history;
+  cacheTimestamp = Date.now();
   
   // Dispatch custom event to notify components
   window.dispatchEvent(new CustomEvent('workoutUpdated'));

@@ -79,85 +79,82 @@ const DietPlans = () => {
         </header>
 
         <div className="px-4 sm:px-6">
-          <div className="mb-3 sm:mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">Meal Plans</h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">Choose the perfect plan for your goals</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-foreground mb-1">Meal Plans</h2>
+            <p className="text-sm text-muted-foreground">Choose the perfect plan for your goals</p>
           </div>
 
-          <div className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {dietPlans.map((plan, index) => (
-              <div key={plan.id} className="card-gradient-glow rounded-2xl overflow-hidden border border-primary/10 hover:border-primary/30 transition-all group">
-                {/* Plan Header with Image */}
-                <div className="relative h-36 sm:h-44 overflow-hidden">
+              <div 
+                key={plan.id} 
+                onClick={() => navigate(`/diet-plan/${plan.id}`)}
+                className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm hover:border-primary/40 transition-all cursor-pointer"
+              >
+                {/* Background Image */}
+                <div className="relative h-40 overflow-hidden">
                   <img
                     src={imageMap[plan.image]}
                     alt={plan.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
                   
-                  {/* Floating badge */}
-                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex gap-1.5 sm:gap-2">
+                  {/* Badges */}
+                  <div className="absolute top-3 right-3 flex flex-col gap-1.5">
                     {notificationPlanId === plan.id && (
-                      <Badge className="bg-green-500/90 backdrop-blur-sm text-white border-0 font-semibold flex items-center gap-1">
+                      <Badge className="bg-green-500/90 backdrop-blur-md text-white border-0 font-semibold flex items-center gap-1 shadow-lg">
                         <Bell className="w-3 h-3" />
-                        Reminders On
+                        Active
                       </Badge>
                     )}
-                    <Badge className="bg-primary/90 backdrop-blur-sm text-white border-0 font-semibold">
-                      {plan.meals} Meals/Day
+                    <Badge className="bg-primary/90 backdrop-blur-md text-white border-0 font-bold shadow-lg">
+                      {plan.meals} Meals
                     </Badge>
                   </div>
 
-                  {/* Plan Info Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30 capitalize">
-                        {plan.goal.replace("-", " ")}
-                      </Badge>
-                    </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 drop-shadow-lg">
-                      {plan.name.replace(/^plans\./, "")}
-                    </h3>
-                    <p className="text-white/90 text-sm drop-shadow">
-                      {plan.description.replace(/^plans\./, "")}
-                    </p>
+                  {/* Goal Badge */}
+                  <div className="absolute top-3 left-3">
+                    <Badge className="bg-background/90 backdrop-blur-md text-foreground border border-border/50 capitalize font-semibold">
+                      {plan.goal.replace("-", " ")}
+                    </Badge>
                   </div>
                 </div>
 
-                {/* Macros Grid */}
-                <div className="p-5">
-                  <div className="grid grid-cols-4 gap-3 mb-5">
-                    <div className="text-center p-3 bg-primary/10 rounded-xl border border-primary/20">
-                      <div className="text-2xl font-bold text-gradient-primary mb-1">
-                        {plan.calories}
-                      </div>
-                      <div className="text-xs text-muted-foreground font-medium">Calories</div>
+                {/* Content */}
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-1">
+                    {plan.name.replace(/^plans\./, "")}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4 line-clamp-2">
+                    {plan.description.replace(/^plans\./, "")}
+                  </p>
+
+                  {/* Macros Row */}
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    <div className="text-center p-2 bg-primary/10 rounded-lg border border-primary/20">
+                      <div className="text-sm font-bold text-primary">{plan.calories}</div>
+                      <div className="text-[10px] text-muted-foreground">Cal</div>
                     </div>
-                    <div className="text-center p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
-                      <div className="text-2xl font-bold text-foreground mb-1">
-                        {plan.protein}g
-                      </div>
-                      <div className="text-xs text-muted-foreground font-medium">Protein</div>
+                    <div className="text-center p-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                      <div className="text-sm font-bold text-purple-400">{plan.protein}g</div>
+                      <div className="text-[10px] text-muted-foreground">Protein</div>
                     </div>
-                    <div className="text-center p-3 bg-orange-500/10 rounded-xl border border-orange-500/20">
-                      <div className="text-2xl font-bold text-foreground mb-1">
-                        {plan.carbs}g
-                      </div>
-                      <div className="text-xs text-muted-foreground font-medium">Carbs</div>
+                    <div className="text-center p-2 bg-orange-500/10 rounded-lg border border-orange-500/20">
+                      <div className="text-sm font-bold text-orange-400">{plan.carbs}g</div>
+                      <div className="text-[10px] text-muted-foreground">Carbs</div>
                     </div>
-                    <div className="text-center p-3 bg-green-500/10 rounded-xl border border-green-500/20">
-                      <div className="text-2xl font-bold text-foreground mb-1">
-                        {plan.fats}g
-                      </div>
-                      <div className="text-xs text-muted-foreground font-medium">Fats</div>
+                    <div className="text-center p-2 bg-green-500/10 rounded-lg border border-green-500/20">
+                      <div className="text-sm font-bold text-green-400">{plan.fats}g</div>
+                      <div className="text-[10px] text-muted-foreground">Fats</div>
                     </div>
                   </div>
 
+                  {/* View Button */}
                   <Button 
-                    className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 glow-primary text-base font-semibold" 
-                    size="lg"
-                    onClick={() => navigate(`/diet-plan/${plan.id}`)}
+                    className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-sm font-bold shadow-lg shadow-primary/20" 
+                    size="sm"
                   >
                     View Full Plan
                   </Button>

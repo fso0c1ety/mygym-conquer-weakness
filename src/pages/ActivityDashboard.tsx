@@ -280,32 +280,67 @@ const ActivityDashboard = () => {
         </div>
 
         {/* Today's Challenges */}
-        <div className="px-6 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold text-foreground">Today's Challenges</h2>
-            <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+        <div className="px-4 sm:px-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Daily Challenges</h2>
+              <p className="text-xs text-muted-foreground">Complete to earn rewards</p>
+            </div>
+            <div className="p-2 bg-yellow-500/10 rounded-lg">
+              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+            </div>
           </div>
-          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 pr-6 hide-scrollbar -mr-6" style={{ WebkitOverflowScrolling: 'touch' }}>
+          
+          <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar -mr-4 pr-4 sm:mr-0 sm:pr-0" style={{ WebkitOverflowScrolling: 'touch' }}>
             {challenges.map((ch, idx) => (
               <div
                 key={idx}
-                className="relative min-w-[260px] sm:min-w-[280px] max-w-xs card-gradient rounded-xl sm:rounded-2xl p-4 sm:p-5 overflow-hidden h-32 sm:h-36 flex flex-col justify-end border border-primary/20 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/40 active:scale-[0.98] glow-primary"
+                className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm hover:border-primary/40 transition-all cursor-pointer min-w-[280px] sm:min-w-[320px] flex-shrink-0"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
-                <img
-                  src={
-                    ch.image === 'challenge-running' ? challengeRunning :
-                    ch.image === 'workout-squats' ? workoutSquats :
-                    ch.image === 'workout-lunges' ? workoutLunges :
-                    ch.image === 'workout-pushups' ? workoutPushups :
-                    challengeRunning
-                  }
-                  alt={ch.title}
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30"
-                />
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-white mb-1 drop-shadow-lg">{ch.title}</h3>
-                  <p className="text-sm text-white/90 drop-shadow">{ch.description}</p>
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0">
+                  <img
+                    src={
+                      ch.image === 'challenge-running' ? challengeRunning :
+                      ch.image === 'workout-squats' ? workoutSquats :
+                      ch.image === 'workout-lunges' ? workoutLunges :
+                      ch.image === 'workout-pushups' ? workoutPushups :
+                      challengeRunning
+                    }
+                    alt={ch.title}
+                    className="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40"></div>
+                </div>
+                
+                {/* Content */}
+                <div className="relative p-4 min-h-[120px] flex flex-col justify-end">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 bg-primary/20 rounded-lg backdrop-blur-sm">
+                        <Zap className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-xs font-bold text-primary uppercase tracking-wide">Challenge</span>
+                    </div>
+                    <div className="px-2 py-1 bg-yellow-500/20 rounded-full border border-yellow-500/30">
+                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-base font-bold text-foreground mb-1">{ch.title}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{ch.description}</p>
+                  
+                  {/* Progress Bar */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-muted-foreground">Progress</span>
+                      <span className="text-xs font-bold text-primary">0%</span>
+                    </div>
+                    <div className="h-1.5 bg-background/60 rounded-full overflow-hidden">
+                      <div className="h-full w-0 bg-gradient-to-r from-primary to-secondary rounded-full transition-all"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
