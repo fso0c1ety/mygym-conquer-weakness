@@ -234,7 +234,7 @@ const WorkoutSession = () => {
             </div>
 
             {/* Set tracker */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mb-4">
               {Array.from({ length: currentExercise.sets }).map((_, idx) => {
                 const setNum = idx + 1;
                 const isComplete = isSetComplete(currentExerciseIndex, setNum);
@@ -278,7 +278,7 @@ const WorkoutSession = () => {
                     Hide Video
                   </Button>
                 </div>
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-black border-2 border-primary/20">
+                <div className="relative aspect-video rounded-lg sm:rounded-xl overflow-hidden bg-black border border-primary/20 sm:border-2">
                   <iframe
                     src={`${currentExercise.videoUrl}?autoplay=0&rel=0&modestbranding=1`}
                     title={currentExercise.name}
@@ -320,7 +320,7 @@ const WorkoutSession = () => {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="card-gradient rounded-xl p-4 border border-primary/10">
               <div className="flex items-center gap-2 mb-2">
                 <div className="p-1.5 bg-primary/20 rounded-lg">
@@ -356,7 +356,7 @@ const WorkoutSession = () => {
         </div>
 
         {/* Bottom Controls */}
-        <div className="px-4 sm:px-6 py-4 bg-gradient-to-t from-background via-background/95 to-background/80 backdrop-blur-xl border-t border-border/50">
+        <div className="px-4 sm:px-6 py-4 pb-safe bg-gradient-to-t from-background via-background/95 to-background/80 backdrop-blur-xl border-t border-border/50">
           {isResting ? (
             <div className="space-y-3">
               <div className="card-gradient-glow rounded-xl p-4 border border-primary/20 text-center">

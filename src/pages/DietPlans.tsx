@@ -57,12 +57,12 @@ const DietPlans = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <div className="card-gradient rounded-lg sm:rounded-xl p-2 sm:p-3 border border-primary/10">
-              <div className="flex items-center gap-2 mb-1">
-                <Flame className="w-4 h-4 text-primary" />
+              <div className="card-gradient rounded-lg sm:rounded-xl p-2 sm:p-3 border border-primary/10">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1">
+                  <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
               </div>
-              <div className="text-xl font-bold text-foreground">2,400</div>
-              <div className="text-xs text-muted-foreground">Daily Goal</div>
+                <div className="text-lg sm:text-xl font-bold text-foreground">2,400</div>
+                <div className="text-[10px] sm:text-xs text-muted-foreground">Daily Goal</div>
             </div>
             <div className="card-gradient rounded-xl p-3 border border-purple-500/10">
               <div className="flex items-center gap-2 mb-1">
@@ -91,7 +91,7 @@ const DietPlans = () => {
             {dietPlans.map((plan, index) => (
               <div key={plan.id} className="card-gradient-glow rounded-2xl overflow-hidden border border-primary/10 hover:border-primary/30 transition-all group">
                 {/* Plan Header with Image */}
-                <div className="relative h-44 overflow-hidden">
+                <div className="relative h-36 sm:h-44 overflow-hidden">
                   <img
                     src={imageMap[plan.image]}
                     alt={plan.name}
@@ -100,7 +100,7 @@ const DietPlans = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                   
                   {/* Floating badge */}
-                  <div className="absolute top-3 right-3 flex gap-2">
+                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex gap-1.5 sm:gap-2">
                     {notificationPlanId === plan.id && (
                       <Badge className="bg-green-500/90 backdrop-blur-sm text-white border-0 font-semibold flex items-center gap-1">
                         <Bell className="w-3 h-3" />
@@ -119,7 +119,7 @@ const DietPlans = () => {
                         {plan.goal.replace("-", " ")}
                       </Badge>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-lg">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 drop-shadow-lg">
                       {plan.name.replace(/^plans\./, "")}
                     </h3>
                     <p className="text-white/90 text-sm drop-shadow">

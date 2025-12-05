@@ -63,12 +63,12 @@ const WorkoutPlan = () => {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="px-6 pt-8 pb-6">
+        <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/30 rounded-full blur-md"></div>
-                <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary p-0.5">
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary to-secondary p-0.5">
                   <img
                     src={logoImage}
                     alt="Profile"
@@ -82,7 +82,7 @@ const WorkoutPlan = () => {
               </div>
             </div>
             <button className="p-2 rounded-xl bg-card/50 backdrop-blur-sm hover:bg-card transition-colors border border-border/50">
-              <Bell className="w-6 h-6 text-foreground" />
+                <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
             </button>
           </div>
 
@@ -114,11 +114,11 @@ const WorkoutPlan = () => {
                     </>
                   )}
                 </div>
-                <div className="text-5xl opacity-20">💪</div>
+                <div className="text-4xl sm:text-5xl opacity-20">💪</div>
               </div>
               
-              <div className="flex items-center gap-4 mt-4">
-                <div className="flex-1 bg-background/50 backdrop-blur-sm rounded-xl p-3 border border-primary/20">
+              <div className="flex items-center gap-3 sm:gap-4 mt-4">
+                <div className="flex-1 bg-background/50 backdrop-blur-sm rounded-lg sm:rounded-xl p-2.5 sm:p-3 border border-primary/20">
                   <div className="text-2xl font-bold text-gradient-primary">{caloriesBurned}</div>
                   <div className="text-xs text-muted-foreground">Calories Burned</div>
                 </div>
@@ -132,7 +132,7 @@ const WorkoutPlan = () => {
         </header>
 
         {/* Your Plan Section */}
-        <div className="px-6 mb-6">
+        <div className="px-4 sm:px-6 mb-4 sm:mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-2xl font-bold text-foreground">Your Workouts</h3>

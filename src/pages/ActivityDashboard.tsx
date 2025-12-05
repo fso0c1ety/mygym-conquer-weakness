@@ -288,11 +288,11 @@ const ActivityDashboard = () => {
             <h2 className="text-lg font-bold text-foreground">Today's Challenges</h2>
             <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
           </div>
-          <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 pr-6 hide-scrollbar -mr-6" style={{ WebkitOverflowScrolling: 'touch' }}>
             {challenges.map((ch, idx) => (
               <div
                 key={idx}
-                className="relative min-w-[280px] max-w-xs card-gradient rounded-2xl p-5 overflow-hidden h-36 flex flex-col justify-end border border-primary/20 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/40 active:scale-[0.98] glow-primary"
+                className="relative min-w-[260px] sm:min-w-[280px] max-w-xs card-gradient rounded-xl sm:rounded-2xl p-4 sm:p-5 overflow-hidden h-32 sm:h-36 flex flex-col justify-end border border-primary/20 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/40 active:scale-[0.98] glow-primary"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
                 <img

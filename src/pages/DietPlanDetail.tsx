@@ -175,10 +175,10 @@ const DietPlanDetail = () => {
             </div>
             <Progress value={progressPercent} className="h-2 mb-4" />
             
-            <div className="grid grid-cols-4 gap-3">
-              <div className="text-center">
-                <div className="text-xl font-bold text-primary">{consumedCalories}</div>
-                <div className="text-xs text-muted-foreground">Calories</div>
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+            <div className="text-center">
+              <div className="text-lg sm:text-xl font-bold text-primary">{consumedCalories}</div>
+              <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight">Calories</div>
               </div>
               <div className="text-center">
                 <div className="text-xl font-bold text-foreground">{consumedProtein}g</div>

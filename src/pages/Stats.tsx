@@ -105,7 +105,7 @@ const Stats = () => {
         <div className="px-4 sm:px-6 mb-4 sm:mb-6">
           <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3">Quick Overview</h2>
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <div className="card-gradient rounded-xl p-4 border border-primary/10">
+            <div className="card-gradient rounded-xl p-3 sm:p-4 border border-primary/10">
               <div className="flex items-center gap-2 mb-2">
                 <div className="p-1.5 bg-primary/20 rounded-lg">
                   <Dumbbell className="w-4 h-4 text-primary" />
@@ -158,7 +158,7 @@ const Stats = () => {
               <TrendingUp className="w-5 h-5 text-green-400" />
             </div>
             
-            <div className="flex items-end justify-between gap-2 h-32 mb-4">
+            <div className="flex items-end justify-between gap-1.5 sm:gap-2 h-24 sm:h-32 mb-4">
               {weeklyData.map((item, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-2">
                   <div className="w-full bg-muted/30 rounded-t-lg relative" style={{ height: '100%' }}>
@@ -209,11 +209,11 @@ const Stats = () => {
             <h2 className="text-xl font-bold text-foreground">Achievements</h2>
             <Award className="w-5 h-5 text-yellow-400" />
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {achievements.map((achievement, idx) => (
               <div
                 key={idx}
-                className={`card-gradient rounded-xl p-4 border text-center transition-all ${
+                className={`card-gradient rounded-lg sm:rounded-xl p-3 sm:p-4 border text-center transition-all ${
                   achievement.unlocked
                     ? 'border-primary/30 hover:border-primary/50 glow-primary'
                     : 'border-border/30 opacity-50'

@@ -115,7 +115,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
       {/* Animated background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-60 h-60 sm:w-80 sm:h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>

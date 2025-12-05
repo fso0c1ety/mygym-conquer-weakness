@@ -200,7 +200,7 @@ const Shop = () => {
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="w-full sm:max-w-lg">
+                <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
                   <SheetHeader>
                     <SheetTitle>Shopping Cart</SheetTitle>
                     <SheetDescription>
@@ -319,7 +319,7 @@ const Shop = () => {
           </div>
 
           {/* Category Filter */}
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 -mr-6 pr-6">
             {categories.map(cat => (
               <Button
                 key={cat.id}
@@ -339,7 +339,7 @@ const Shop = () => {
 
         {/* Products Grid */}
         <div className="px-6 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filteredProducts.map(product => (
               <div
                 key={product.id}
@@ -389,7 +389,7 @@ const Shop = () => {
                 </div>
 
                 {/* Product Info */}
-                <div className="p-4">
+                <div className="p-3 sm:p-4">
                   <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">
                     {product.name}
                   </h3>
