@@ -1,15 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Bell, Flame, TrendingUp, Dumbbell } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import WorkoutCard from "@/components/WorkoutCard";
-import { workouts } from "@/lib/workouts";
+import { workouts, WorkoutCategory, getCategoryLabel, getCategoryIcon } from "@/lib/workouts";
+import { getTodayStats, getWorkoutHistory } from "@/lib/workoutTracking";
 import logoImage from "@/assets/logo.png";
 
 const WorkoutPlan = () => {
-  const [activeTab, setActiveTab] = useState<"all" | "lower" | "upper">("all");
-  const caloriesBurned = 538;
+  const [activeTab, setActiveTab] = useState<WorkoutCategory | "all">("all");
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Get user name from localStorage
+  const userName = localStorage.getItem('userName') || 'Warrior';
+  
+  // Get real workout stats
+  const todayStats = useMemo(() => getTodayStats(), [refreshKey]);
+  const workoutHistory = useMemo(() => getWorkoutHistory(), [refreshKey]);
+  
+  // Get last completed workout
+  const lastWorkout = workoutHistory.length > 0 
+    ? workoutHistory[workoutHistory.length - 1]
+    : null;
+  
+  const caloriesBurned = todayStats.calories;
   const totalWorkouts = workouts.length;
-  const completedToday = 2;
+  const completedToday = todayStats.workouts;
+  
+  // Listen for workout updates
+  useEffect(() => {
+    const handleUpdate = () => setRefreshKey(prev => prev + 1);
+    
+    window.addEventListener('workoutUpdated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    
+    return () => {
+      window.removeEventListener('workoutUpdated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  const categories: Array<WorkoutCategory | "all"> = [
+    "all",
+    "upper",
+    "lower",
+    "core",
+    "full-body",
+    "hiit",
+    "flexibility",
+  ];
 
   const filteredWorkouts = workouts.filter(
     (w) => activeTab === "all" || w.category === activeTab
@@ -39,7 +77,7 @@ const WorkoutPlan = () => {
                 </div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">Hi James</h1>
+                <h1 className="text-xl font-bold text-foreground">Hi {userName}</h1>
                 <p className="text-sm text-muted-foreground">Ready to crush it?</p>
               </div>
             </div>
@@ -62,8 +100,19 @@ const WorkoutPlan = () => {
                       Today's Progress
                     </span>
                   </div>
-                  <h2 className="text-3xl font-bold text-gradient-primary mb-1">Lower Body</h2>
-                  <p className="text-sm text-muted-foreground">C6001 · 10 mins completed</p>
+                  {lastWorkout ? (
+                    <>
+                      <h2 className="text-3xl font-bold text-gradient-primary mb-1">{lastWorkout.workoutName}</h2>
+                      <p className="text-sm text-muted-foreground">
+                        Last workout · {lastWorkout.duration} mins · {lastWorkout.totalSets} sets
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="text-3xl font-bold text-gradient-primary mb-1">Start Your Day</h2>
+                      <p className="text-sm text-muted-foreground">No workouts yet · Let's get moving!</p>
+                    </>
+                  )}
                 </div>
                 <div className="text-5xl opacity-20">💪</div>
               </div>
@@ -94,36 +143,22 @@ const WorkoutPlan = () => {
           
           {/* Category Tabs */}
           <div className="flex gap-2 mb-6 overflow-x-auto hide-scrollbar pb-2">
-            <button
-              onClick={() => setActiveTab("all")}
-              className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
-                activeTab === "all"
-                  ? "bg-gradient-to-r from-primary to-secondary text-white glow-primary"
-                  : "bg-card/50 backdrop-blur-sm text-foreground hover:bg-card border border-border/50"
-              }`}
-            >
-              All Workouts
-            </button>
-            <button
-              onClick={() => setActiveTab("lower")}
-              className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
-                activeTab === "lower"
-                  ? "bg-gradient-to-r from-primary to-secondary text-white glow-primary"
-                  : "bg-card/50 backdrop-blur-sm text-foreground hover:bg-card border border-border/50"
-              }`}
-            >
-              Lower Body
-            </button>
-            <button
-              onClick={() => setActiveTab("upper")}
-              className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
-                activeTab === "upper"
-                  ? "bg-gradient-to-r from-primary to-secondary text-white glow-primary"
-                  : "bg-card/50 backdrop-blur-sm text-foreground hover:bg-card border border-border/50"
-              }`}
-            >
-              Upper Body
-            </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveTab(category)}
+                className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === category
+                    ? "bg-gradient-to-r from-primary to-secondary text-white glow-primary"
+                    : "bg-card/50 backdrop-blur-sm text-foreground hover:bg-card border border-border/50"
+                }`}
+              >
+                {category !== "all" && (
+                  <span className="text-lg">{getCategoryIcon(category as WorkoutCategory)}</span>
+                )}
+                {category === "all" ? "All Workouts" : getCategoryLabel(category as WorkoutCategory)}
+              </button>
+            ))}
           </div>
 
           {/* Workout Cards */}

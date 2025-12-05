@@ -1,9 +1,10 @@
-import { Calendar, Flame, Settings as SettingsIcon, TrendingUp, Zap, Star } from "lucide-react";
+import { Calendar, Flame, Settings as SettingsIcon, TrendingUp, Zap, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import ProgressRing from "@/components/ProgressRing";
 import BottomNav from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { todayActivity, getTodaysChallenges } from "@/lib/workouts";
+import { getTodaysChallenges } from "@/lib/workouts";
+import { getTodayStats, getCurrentStreak, getWorkoutHistory } from "@/lib/workoutTracking";
 import logoImage from "@/assets/logo.png";
 
 import challengeRunning from "@/assets/challenge-running.jpg";
@@ -12,17 +13,66 @@ import workoutLunges from "@/assets/workout-lunges.jpg";
 import workoutPushups from "@/assets/workout-pushups.jpg";
 
 import { useNavigate } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const ActivityDashboard = () => {
   const challenges = getTodaysChallenges();
-  const progressPercent = (todayActivity.caloriesBurned / todayActivity.caloriesGoal) * 100;
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [weekOffset, setWeekOffset] = useState(0); // 0 = current week, -1 = previous week, etc.
+  
+  // Get user name from localStorage
+  const userName = localStorage.getItem('userName') || 'Warrior';
+  
+  // Get real workout stats - refreshes when refreshKey changes
+  const todayStats = useMemo(() => getTodayStats(), [refreshKey]);
+  const streak = useMemo(() => getCurrentStreak(), [refreshKey]);
+  
+  // Get stats for selected date
+  const selectedDateStats = useMemo(() => {
+    const workouts = getWorkoutHistory();
+    const selectedDateStr = selectedDate.toISOString().split('T')[0];
+    
+    const dayWorkouts = workouts.filter((w: any) => w.date.split('T')[0] === selectedDateStr);
+    
+    return {
+      calories: dayWorkouts.reduce((sum: number, w: any) => sum + w.caloriesBurned, 0),
+      workouts: dayWorkouts.length,
+      minutes: dayWorkouts.reduce((sum: number, w: any) => sum + w.duration, 0)
+    };
+  }, [selectedDate, refreshKey]);
+  
+  const todayActivity = {
+    caloriesGoal: 2000,
+    caloriesBurned: selectedDateStats.calories,
+    caloriesRemaining: Math.max(0, 2000 - selectedDateStats.calories)
+  };
+  
+  const progressPercent = (todayActivity.caloriesBurned / todayActivity.caloriesGoal) * 100;
+  
+  // Listen for storage changes and refresh periodically
+  useEffect(() => {
+    const handleUpdate = () => setRefreshKey(prev => prev + 1);
+    
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('workoutUpdated', handleUpdate);
+    
+    // Refresh every 10 seconds as backup
+    const interval = setInterval(handleUpdate, 10000);
+    
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('workoutUpdated', handleUpdate);
+      clearInterval(interval);
+    };
+  }, []);
 
-  // Get current week data
+  // Get current week data with navigation support
   const weekData = useMemo(() => {
     const today = new Date();
+    today.setDate(today.getDate() + (weekOffset * 7)); // Adjust for week offset
+    
     const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
     const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Calculate Monday of current week
     
@@ -38,8 +88,8 @@ const ActivityDashboard = () => {
       dates.push(date);
     }
     
-    return { daysOfWeek, dates, today };
-  }, []);
+    return { daysOfWeek, dates, today: new Date() }; // Keep original today reference
+  }, [weekOffset]);
 
   // Format month and year
   const currentMonthYear = useMemo(() => {
@@ -86,33 +136,60 @@ const ActivityDashboard = () => {
                 <h1 className="text-lg sm:text-xl font-bold text-gradient-primary">{currentMonthYear}</h1>
               </div>
             </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="hover:bg-primary/10" aria-label="Open settings">
-                  <SettingsIcon className="h-5 w-5" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-48 p-2 card-gradient border-primary/20">
-                <div className="text-sm font-semibold px-2 py-1.5">Menu</div>
-                <button
-                  className="w-full text-left px-2 py-1.5 rounded-md hover:bg-primary/20 transition-colors text-sm"
-                  onClick={() => navigate("/settings")}
-                >
-                  Settings
-                </button>
-              </PopoverContent>
-            </Popover>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-lg">
+                <Flame className="w-4 h-4 text-primary" />
+                <span className="text-sm font-bold text-primary">{streak}</span>
+              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="hover:bg-primary/10" aria-label="Open settings">
+                    <SettingsIcon className="h-5 w-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-48 p-2 card-gradient border-primary/20">
+                  <div className="text-sm font-semibold px-2 py-1.5">Menu</div>
+                  <button
+                    className="w-full text-left px-2 py-1.5 rounded-md hover:bg-primary/20 transition-colors text-sm"
+                    onClick={() => navigate("/settings")}
+                  >
+                    Settings
+                  </button>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         </header>
 
         {/* Calendar */}
         <div className="px-4 sm:px-6 mb-4 sm:mb-6">
           <div className="card-gradient-glow rounded-xl sm:rounded-2xl p-4 sm:p-5 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg">
-                <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg">
+                  <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+                </div>
+                <span className="text-xs sm:text-sm font-semibold text-foreground">
+                  {weekOffset === 0 ? 'This Week' : weekOffset === -1 ? 'Last Week' : `${Math.abs(weekOffset)} weeks ago`}
+                </span>
               </div>
-              <span className="text-xs sm:text-sm font-semibold text-foreground">This Week</span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setWeekOffset(prev => prev - 1)}
+                  className="p-1.5 rounded-lg hover:bg-primary/10 transition-colors"
+                  aria-label="Previous week"
+                >
+                  <ChevronLeft className="w-4 h-4 text-foreground" />
+                </button>
+                <button
+                  onClick={() => setWeekOffset(prev => Math.min(prev + 1, 0))}
+                  disabled={weekOffset === 0}
+                  className="p-1.5 rounded-lg hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Next week"
+                >
+                  <ChevronRight className="w-4 h-4 text-foreground" />
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-6 gap-2 sm:gap-3">
               {weekData.daysOfWeek.map((day, idx) => {
@@ -148,7 +225,9 @@ const ActivityDashboard = () => {
         {/* Stats Cards */}
         <div className="px-4 sm:px-6 mb-4 sm:mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base sm:text-lg font-bold text-foreground">Today's Stats</h2>
+            <h2 className="text-base sm:text-lg font-bold text-foreground">
+              {isSameDay(selectedDate, new Date()) ? "Today's Stats" : selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </h2>
             <TrendingUp className="w-5 h-5 text-primary" />
           </div>
           <div className="grid grid-cols-2 gap-4">

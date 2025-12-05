@@ -4,6 +4,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { startNotificationService } from "@/lib/mealNotifications";
+import { startWorkoutReminderService } from "@/lib/workoutReminders";
 import Login from "./pages/Login";
 import ActivityDashboard from "./pages/ActivityDashboard";
 import WorkoutPlan from "./pages/WorkoutPlan";
@@ -11,6 +14,7 @@ import WorkoutSession from "./pages/WorkoutSession";
 import Stats from "./pages/Stats";
 import Memberships from "./pages/Memberships";
 import DietPlans from "./pages/DietPlans";
+import DietPlanDetail from "./pages/DietPlanDetail";
 import Shop from "./pages/Shop";
 import Checkout from "./pages/Checkout";
 import OnlineTrainers from "./pages/OnlineTrainers";
@@ -20,8 +24,15 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+  // Start notification service on app load
+  useEffect(() => {
+    startNotificationService();
+    startWorkoutReminderService();
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -34,6 +45,7 @@ const App = () => (
           <Route path="/stats" element={<ProtectedRoute><Stats /></ProtectedRoute>} />
           <Route path="/memberships" element={<ProtectedRoute><Memberships /></ProtectedRoute>} />
           <Route path="/diet-plans" element={<ProtectedRoute><DietPlans /></ProtectedRoute>} />
+          <Route path="/diet-plan/:id" element={<ProtectedRoute><DietPlanDetail /></ProtectedRoute>} />
           <Route path="/shop" element={<ProtectedRoute><Shop /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           <Route path="/trainers" element={<ProtectedRoute><OnlineTrainers /></ProtectedRoute>} />
@@ -45,5 +57,6 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+};
 
 export default App;

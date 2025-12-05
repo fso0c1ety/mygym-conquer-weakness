@@ -1,13 +1,16 @@
 import { dietPlans } from "@/lib/dietPlans";
+import { getActiveMealPlan } from "@/lib/mealNotifications";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import BottomNav from "@/components/BottomNav";
+import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import workoutSquats from "@/assets/workout-squats.jpg";
 import workoutPushups from "@/assets/workout-pushups.jpg";
 import workoutDeadlift from "@/assets/workout-deadlift.jpg";
 import challengeRunning from "@/assets/challenge-running.jpg";
-import { Apple, Flame, Target, ChefHat } from "lucide-react";
+import { Apple, Flame, Target, ChefHat, Bell } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const imageMap: Record<string, string> = {
   "workout-squats": workoutSquats,
@@ -17,6 +20,17 @@ const imageMap: Record<string, string> = {
 };
 
 const DietPlans = () => {
+  const navigate = useNavigate();
+  const [notificationPlanId, setNotificationPlanId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Check which plan has notifications enabled
+    const activeMealPlan = getActiveMealPlan();
+    if (activeMealPlan) {
+      setNotificationPlanId(activeMealPlan.planId);
+    }
+  }, []);
+  
   return (
     <div className="min-h-screen pb-24">
       {/* Animated background */}
@@ -86,7 +100,13 @@ const DietPlans = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                   
                   {/* Floating badge */}
-                  <div className="absolute top-3 right-3">
+                  <div className="absolute top-3 right-3 flex gap-2">
+                    {notificationPlanId === plan.id && (
+                      <Badge className="bg-green-500/90 backdrop-blur-sm text-white border-0 font-semibold flex items-center gap-1">
+                        <Bell className="w-3 h-3" />
+                        Reminders On
+                      </Badge>
+                    )}
                     <Badge className="bg-primary/90 backdrop-blur-sm text-white border-0 font-semibold">
                       {plan.meals} Meals/Day
                     </Badge>
@@ -140,6 +160,7 @@ const DietPlans = () => {
                   <Button 
                     className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 glow-primary text-base font-semibold" 
                     size="lg"
+                    onClick={() => navigate(`/diet-plan/${plan.id}`)}
                   >
                     View Full Plan
                   </Button>

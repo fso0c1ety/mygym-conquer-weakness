@@ -1,38 +1,72 @@
 import { TrendingUp, Flame, Activity, Award, Target, Calendar, Zap, Trophy, Heart, Dumbbell, Timer } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
-import { todayActivity } from "@/lib/workouts";
+import { getTodayStats } from "@/lib/workoutTracking";
 import { Progress } from "@/components/ui/progress";
+import { getTotalStats, getStatsForLastDays, getCurrentStreak, getAchievements } from "@/lib/workoutTracking";
+import { useMemo, useState, useEffect } from "react";
 
 const Stats = () => {
-  const weeklyAvg = 1650;
-  const monthlyTotal = 42340;
-  const workoutStreak = 7;
-  const totalWorkouts = 124;
-  const personalBests = 12;
-  const avgHeartRate = 145;
-  const totalMinutes = 3850;
-  const weeklyGoalProgress = 75;
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Listen for storage changes to refresh stats
+  useEffect(() => {
+    const handleUpdate = () => setRefreshKey(prev => prev + 1);
+    
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('workoutUpdated', handleUpdate);
+    
+    // Also refresh every 10 seconds as backup
+    const interval = setInterval(handleUpdate, 10000);
+    
+    return () => {
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('workoutUpdated', handleUpdate);
+      clearInterval(interval);
+    };
+  }, []);
+  
+  // Get real data from workout tracking - refreshes when refreshKey changes
+  const totalStats = useMemo(() => getTotalStats(), [refreshKey]);
+  const weeklyStats = useMemo(() => getStatsForLastDays(7), [refreshKey]);
+  const monthlyStats = useMemo(() => getStatsForLastDays(30), [refreshKey]);
+  const streak = useMemo(() => getCurrentStreak(), [refreshKey]);
+  const achievements = useMemo(() => getAchievements(), [refreshKey]);
+  const todayStats = useMemo(() => getTodayStats(), [refreshKey]);
+  
+  // Calculate aggregates
+  const totalWorkouts = totalStats.totalWorkouts;
+  const totalMinutes = totalStats.totalMinutes;
+  const totalCalories = totalStats.totalCalories;
+  
+  // Format minutes display
+  const formatMinutes = (mins: number) => {
+    if (mins === 0) return '0';
+    if (mins < 60) return mins.toString();
+    const hours = Math.floor(mins / 60);
+    const remainingMins = mins % 60;
+    return remainingMins > 0 ? `${hours}h ${remainingMins}m` : `${hours}h`;
+  };
+  
+  const weeklyAvg = Math.round(weeklyStats.reduce((sum, day) => sum + day.calories, 0) / 7);
+  const monthlyTotal = monthlyStats.reduce((sum, day) => sum + day.calories, 0);
+  const monthlyGoal = 50000; // 50k calories per month
+  const weeklyGoalProgress = Math.min(Math.round((monthlyTotal / monthlyGoal) * 100), 100);
+  
+  const personalBests = achievements.filter(a => a.unlocked).length;
+  const avgHeartRate = 145; // This would need heart rate tracking
 
-  // Weekly workout data for mini chart
-  const weeklyData = [
-    { day: 'Mon', value: 80, calories: 1850 },
-    { day: 'Tue', value: 60, calories: 1420 },
-    { day: 'Wed', value: 90, calories: 2100 },
-    { day: 'Thu', value: 70, calories: 1650 },
-    { day: 'Fri', value: 100, calories: 2300 },
-    { day: 'Sat', value: 85, calories: 1980 },
-    { day: 'Sun', value: 50, calories: 1200 }
-  ];
-
-  // Achievements
-  const achievements = [
-    { icon: '🏆', title: 'First Milestone', description: '10 workouts completed', unlocked: true },
-    { icon: '💪', title: 'Strength Beast', description: '50 strength workouts', unlocked: true },
-    { icon: '🔥', title: 'Week Warrior', description: '7-day streak', unlocked: true },
-    { icon: '⚡', title: 'Speed Demon', description: 'Complete under 30 mins', unlocked: false },
-    { icon: '🎯', title: 'Perfect Month', description: '30-day streak', unlocked: false },
-    { icon: '👑', title: 'Gym Legend', description: '100 workouts', unlocked: true }
-  ];
+  // Format weekly data for chart - last 7 days with day names
+  const weeklyData = weeklyStats.map((day, idx) => {
+    const date = new Date(day.date);
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const maxCalories = Math.max(...weeklyStats.map(d => d.calories), 1);
+    
+    return {
+      day: dayNames[date.getDay()],
+      value: Math.round((day.calories / maxCalories) * 100),
+      calories: day.calories
+    };
+  });
 
   return (
     <div className="min-h-screen pb-24">
@@ -59,7 +93,7 @@ const Stats = () => {
                   <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                   <h3 className="text-base sm:text-lg font-semibold text-foreground">Current Streak</h3>
                 </div>
-                <p className="text-4xl sm:text-6xl font-bold text-gradient-primary mb-2">{workoutStreak}</p>
+                <p className="text-4xl sm:text-6xl font-bold text-gradient-primary mb-2">{streak}</p>
                 <p className="text-xs sm:text-sm text-muted-foreground">Days in a row - Keep crushing it!</p>
               </div>
               <div className="text-5xl sm:text-7xl opacity-20">🔥</div>
@@ -88,7 +122,7 @@ const Stats = () => {
                 </div>
                 <span className="text-xs text-muted-foreground">Total Minutes</span>
               </div>
-              <p className="text-2xl font-bold text-foreground">{totalMinutes}</p>
+              <p className="text-2xl font-bold text-foreground">{formatMinutes(totalMinutes)}</p>
             </div>
 
             <div className="card-gradient rounded-xl p-4 border border-pink-500/10">
@@ -106,9 +140,9 @@ const Stats = () => {
                 <div className="p-1.5 bg-orange-500/20 rounded-lg">
                   <Trophy className="w-4 h-4 text-orange-400" />
                 </div>
-                <span className="text-xs text-muted-foreground">Personal Bests</span>
+                <span className="text-xs text-muted-foreground">Achievements</span>
               </div>
-              <p className="text-2xl font-bold text-foreground">{personalBests}</p>
+              <p className="text-2xl font-bold text-foreground">{personalBests}/{achievements.length}</p>
             </div>
           </div>
         </div>
@@ -138,14 +172,14 @@ const Stats = () => {
               ))}
             </div>
 
-            <div className="flex items-center justify-between pt-3 border-t border-border/50">
+              <div className="flex items-center justify-between pt-3 border-t border-border/50">
               <div>
                 <p className="text-sm text-muted-foreground">Daily Average</p>
                 <p className="text-xl font-bold text-foreground">{weeklyAvg} kcal</p>
               </div>
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">This Week</p>
-                <p className="text-xl font-bold text-gradient-primary">{weeklyAvg * 7} kcal</p>
+                <p className="text-xl font-bold text-gradient-primary">{weeklyStats.reduce((sum, d) => sum + d.calories, 0)} kcal</p>
               </div>
             </div>
           </div>
@@ -160,7 +194,7 @@ const Stats = () => {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-foreground">Monthly Goal</h3>
-                <p className="text-sm text-muted-foreground">{monthlyTotal.toLocaleString()} / {(monthlyTotal / (weeklyGoalProgress / 100)).toFixed(0)} kcal</p>
+                <p className="text-sm text-muted-foreground">{monthlyTotal.toLocaleString()} / {monthlyGoal.toLocaleString()} kcal</p>
               </div>
               <span className="text-2xl font-bold text-primary">{weeklyGoalProgress}%</span>
             </div>
@@ -210,7 +244,7 @@ const Stats = () => {
                     <p className="text-xs text-muted-foreground">Burned</p>
                   </div>
                 </div>
-                <p className="text-2xl font-bold text-gradient-primary">{todayActivity.caloriesBurned}</p>
+                <p className="text-2xl font-bold text-gradient-primary">{todayStats.calories}</p>
               </div>
             </div>
 
@@ -240,7 +274,7 @@ const Stats = () => {
                     <p className="text-xs text-muted-foreground">This week</p>
                   </div>
                 </div>
-                <p className="text-2xl font-bold text-foreground">2,300 <span className="text-sm text-muted-foreground">kcal</span></p>
+                <p className="text-2xl font-bold text-foreground">{Math.max(...weeklyStats.map(d => d.calories), 0).toLocaleString()} <span className="text-sm text-muted-foreground">kcal</span></p>
               </div>
             </div>
           </div>
