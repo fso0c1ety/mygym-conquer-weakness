@@ -5,17 +5,12 @@ const config: CapacitorConfig = {
   appName: 'MyGym',
   webDir: 'dist',
   server: {
-    androidScheme: 'https',
-    iosScheme: 'capacitor'
+    androidScheme: 'https'
   },
   android: {
     allowMixedContent: false,
     captureInput: true,
-    webContentsDebuggingEnabled: false
-  },
-  ios: {
-    contentInset: 'automatic',
-    scrollEnabled: true
+    webContentsDebuggingEnabled: true // Enable for debugging
   },
   plugins: {
     Keyboard: {
@@ -26,14 +21,7 @@ const config: CapacitorConfig = {
       launchShowDuration: 0,
       launchAutoHide: true,
       backgroundColor: '#ef4444',
-      androidSplashResourceName: 'splash',
-      androidScaleType: 'CENTER_CROP',
-      showSpinner: false,
-      androidSpinnerStyle: 'large',
-      iosSpinnerStyle: 'small',
-      spinnerColor: '#ffffff',
-      splashFullScreen: true,
-      splashImmersive: true
+      showSpinner: false
     }
   }
 };
